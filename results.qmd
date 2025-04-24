@@ -8,7 +8,8 @@
 
 ```{r}
 library(ggplot2)
-ggplot(iris, aes(Sepal.Length, Sepal.Width))+
+ggplot(mtcars, aes(x = wt, y = mpg)))+
   geom_point()
 ```
+
 
