@@ -8,7 +8,7 @@
 
 ```{r}
 library(ggplot2)
-ggplot(mtcars, aes(x = wt, y = mpg)))+
+ggplot(mtcars, aes(y = wt, x = mpg)))+
   geom_point()
 ```
 
