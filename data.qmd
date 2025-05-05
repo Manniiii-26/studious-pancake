@@ -1,9 +1,60 @@
 # Data
 
-## Description
+## Context & Background Information
+
+This dataset is originally from the National Institute of Diabetes and Digestive and Kidney Diseases. Several constraints were placed on the selection of these instances from a larger database. In particular, all patients here are females at least 21 years old of Pima Indian heritage.
+The dataset has been collected with a sample size of 768 with 8 variables and a column of outcome. I got this dataset from Kaggle.
+
+## Content
+
+-Number of Smaple: 768
+-Number of Attribute: 8
+
+- Pregnancies: number of times pregnant
+- Glucose: plasma glucose concentration 2 hours in an oral glucose tolerance
+test
+- BloodPressure: diastolic blood pressure (mm Hg)
+- SkinThinkness: triceps skin fold thickness (mm)
+- Insulin: 2-Hour serum insulin (mu U/ml)
+- BMI: body mass index (weight in kg/(height in m)^2)
+- DiabetesPedigreeFunction: diabetes pedigree function
+- Age: age (years)
+- Outcome: class variable (0 = No, 1 = Y es)
+
+```{r}
+
+library(dplyr)
+
+df <- read.csv("data/diabetes.csv")
+
+summary(df)
+
+# View summary of zeros
+sapply(df, function(x) sum(x == 0))
+```
 
 ## Missing value analysis
+This dataset have missing values, they uses '0' to fill in the dataset beforhand so I am not able to tell rather the '0' means missing or the real response is actually zero. Expect for the 'Outcome' variable, '0' indicate no diabeties.
+
+From the summary, variable 'Pregnancies' have 111 responses are '0' which I will not mutate this column. Since this dataset is all females at least 21 years old, I do believe that some of the zeros for pregnanices does mean no pregnanices history.
+
+There is 5 missing values for 'Glucose', 35 missing values for 'BloodPressure', 277 missing values for 'SkinThickness', 374 missing values for 'Insulin', 11 missing values for 'BMI', and no missing values for 'DiabetesPedigreeFunction' and 'Age'. I would replace zeros with the median of the non-zero values, median is robust to outliers and is commonly used in medical datasets.
+
+```{r}
+# Columns where 0 is considered missing (except 'Pregnancies' and 'Outcome')
+missing_cols <- c("Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI")
+
+# Replace 0 with median of non-zero values in the specified columns
+for (col in missing_cols) {
+  median_value <- median(df[[col]][df[[col]] != 0], na.rm = TRUE)
+  df[[col]][df[[col]] == 0] <- median_value
+}
+
+# Check result
+sapply(df, function(x) sum(x == 0))
+```
+
+In my study, the variable I propose to categorize and make inferences about "outcome", indicates the potential diagnosis of diabetes. This variable determines whether a diabetes test result is positive (category value 1) or negative (category value 0). A remarkable aspect of our dataset is the "pregnancy" variable, with a minimum value of 0, a maximum value of 17, and a mean value of 3.845. It would be particularly informative to explore whether pregnancy is an important factor influencing the outcome of a diabetes diagnosis and to assess the degree to which it does so. In addition, common predictors such as body mass index (BMI) and age are expected to play an important role in determining outcomes.
 
 
 
-this is not a correct page

@@ -4,9 +4,10 @@ project:
 
 execute:
   echo: true
+  messages: false 
 
 book:
-  title: "St5293_final_project"
+  title: "Analysis of Diabetes with Machine Learning Methods"
   author:
     - Man Ni Chau
   repo-url: https://github.com/Manniiii-26/studious-pancake.git
