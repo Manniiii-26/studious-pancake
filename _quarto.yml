@@ -4,13 +4,14 @@ project:
 
 execute:
   echo: true
+  messages: false 
 
 book:
-  title: "St5293_final_project"
+  title: "Analysis of Diabetes with Machine Learning Methods"
   author:
     - Man Ni Chau
   repo-url: https://github.com/Manniiii-26/studious-pancake.git
-  date: today
+  date: May 5th, 2025
   page-footer:
     right: |
       This book was built with <a href="https://quarto.org/">Quarto</a>.
@@ -19,12 +20,12 @@ book:
     - index.qmd
     - data.qmd
     - results.qmd
-    - d3graph.qmd
     - conclusion.qmd
 
 format:
   html:
     theme: cosmo
     code-fold: true
+
 
 
