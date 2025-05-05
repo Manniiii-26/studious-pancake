@@ -1,5 +1,6 @@
 # Introduction
 
+<<<<<<< HEAD
 ## Project Goal
 
 The objective of my project is to draw inferences and predictions from patients' diagnostic measurements related to the detection of diabetes, with a focus on uncovering patterns or relationships between variables. My main goal is to understand the interactions between the various factors that we have available and to clarify which factors have a significant impact on diabetes outcomes.
@@ -7,4 +8,20 @@ The objective of my project is to draw inferences and predictions from patients'
 ## Significance of the Project Question
 
 This topic is important to me because of the shocking statistics surrounding diabetes; approximately 38 million Americans have been diagnosed with diabetes, which is roughly 1 in 10 people. In this research effort, my goal is to investigate this issue in depth. I want to reveal the key factors that contribute to the development of diabetes, with the ultimate goal of educating people about diabetes prevention and encouraging them to be active in monitoring their health before the condition gets worse.
+=======
+## Research Goal
+>>>>>>> fa690e0a2a368b101ba088cd3afcaa399e913d92
 
+The objective of my research is to draw inferences and predictions from patients' diagnostic
+measurements related to the detection of diabetes, with a focus on uncovering patterns or
+relationships between variables.
+My main goal is to understand the interactions between the various factors that we have available
+and to clarify which factors have a significant impact on diabetes outcomes.
+## Significance of the Research Question
+
+This topic is important to me because of the shocking statistics surrounding diabetes.
+approximately 38 million Americans have been diagnosed with diabetes, which is roughly 1 in
+10 people. In this research effort, my goal is to investigate this issue in depth. My goal is to
+reveal the key factors that contribute to the development of diabetes, with the ultimate goal of
+educating people about diabetes prevention and encouraging them to be active in monitoring
+their health before the condition gets worse.
