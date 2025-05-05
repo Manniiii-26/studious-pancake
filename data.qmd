@@ -7,8 +7,9 @@ The dataset has been collected with a sample size of 768 with 8 variables and a 
 
 ## Content
 
--Number of Smaple: 768
--Number of Attribute: 8
+- Number of Smaple: 768
+
+- Number of Attribute: 8
 
 - Pregnancies: number of times pregnant
 - Glucose: plasma glucose concentration 2 hours in an oral glucose tolerance
