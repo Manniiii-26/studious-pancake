@@ -6,7 +6,6 @@ execute:
   echo: true
   warning: false
   message: false
-
 book:
   title: "Analysis of Diabetes with Machine Learning Methods"
   author:
@@ -27,5 +26,6 @@ format:
   html:
     theme: cosmo
     code-fold: true
+
 
 

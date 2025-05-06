@@ -372,3 +372,7 @@ ggplot(df_gower, aes(x = gower)) +
 
 
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> fa690e0a2a368b101ba088cd3afcaa399e913d92

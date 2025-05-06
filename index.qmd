@@ -8,9 +8,9 @@ The objective of my project is to draw inferences and predictions from patients'
 
 This topic is important to me because of the shocking statistics surrounding diabetes; approximately 38 million Americans have been diagnosed with diabetes, which is roughly 1 in 10 people. In this research effort, my goal is to investigate this issue in depth. I want to reveal the key factors that contribute to the development of diabetes, with the ultimate goal of educating people about diabetes prevention and encouraging them to be active in monitoring their health before the condition gets worse.
 
-# Statistical Technique
+## Statistical Technique
 
-## Logistic Regression 
+### Logistic Regression 
 - Logistic regression allows me to interpret the coefficient of the regression model in terms of an odd ratio. It gives a clear understanding of how each of the variables contributes to the model outcome. It is particularly useful in finding how influential a variable is. The main reason that I have chosen logistic regression is because of the binomial outcome, it would not be as meaningful for linear regression or else. I will also conduct a deviance test and Pearson chi-square test to ensure the logistic regression is a meaningful model to analyze and make predictions.
 
 ## Tree Classification
@@ -22,5 +22,11 @@ This topic is important to me because of the shocking statistics surrounding dia
 ## LIME
 - Local Interpretable Model-agnostic Explanations, starts by choosing a specific sample, x', which is our data point of interest. It then perturbs this sample by creating fake data points in the neighborhood of x'. These fake data points are fed into the black box model to obtain predictions. Each fake data point is weighted based on its distance or similarity to x', giving more importance to those closer to the original sample. After this, LIME fits a simple and interpretable model to these weighted fake data points. This local model is tuned as necessary and helps us observe how the black box model’s predictions change in response to variations around x'. Ultimately, this process reveals which features were most important for that specific prediction.
 
+
+The objective of my project is to draw inferences and predictions from patients' diagnostic measurements related to the detection of diabetes, with a focus on uncovering patterns or relationships between variables. My main goal is to understand the interactions between the various factors that we have available and to clarify which factors have a significant impact on diabetes outcomes.
+
+## Significance of the Project Question
+
+This topic is important to me because of the shocking statistics surrounding diabetes; approximately 38 million Americans have been diagnosed with diabetes, which is roughly 1 in 10 people. In this research effort, my goal is to investigate this issue in depth. I want to reveal the key factors that contribute to the development of diabetes, with the ultimate goal of educating people about diabetes prevention and encouraging them to be active in monitoring their health before the condition gets worse.
 
 
