@@ -11,7 +11,7 @@ book:
   author:
     - Man Ni Chau
   repo-url: https://github.com/Manniiii-26/studious-pancake.git
-  date: May 5th, 2025
+  date: today
   page-footer:
     right: |
       This book was built with <a href="https://quarto.org/">Quarto</a>.
