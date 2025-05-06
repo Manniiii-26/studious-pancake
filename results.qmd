@@ -1,11 +1,5 @@
 # Results
 
-##First result
-
-
-##Second result
-
-
 ```{r}
 library(pdp)
 library(randomForest)
@@ -13,6 +7,191 @@ library(ggplot2)
 library(purrr)
 library(tidyr)
 library(dplyr)
+library(rpart)
+library(rpart.plot)
+library(caret)
+library(tidyverse)
+library(pROC)
+library(gridExtra)
+library(lime)
+library(cluster)
+
+df <- read.csv("data/diabetes.csv")
+df <- df %>%
+  mutate(Outcome = ifelse(Outcome == 0, "No Diabetes", "Diabetes"))
+df$Outcome <- as.factor(df$Outcome)
+```
+
+```{r}
+set.seed(5293)
+
+
+
+# Split the data into training and testing sets (70% train, 30% test)
+train_index <- createDataPartition(df$Outcome, p = 0.7, list = FALSE)
+
+train_data <- df[train_index, ]
+test_data <- df[-train_index, ]
+
+# Train Decision Tree model
+tree_model <- rpart(Outcome ~ ., data = train_data, method = "class")
+
+# Plot the tree
+rpart.plot(tree_model, type = 2, extra = 104, fallen.leaves = TRUE, box.palette = 'BuOr')
+#, extra = 3 - Display the misclassification rate
+
+```
+
+- Make predictions on the test set
+```{r}
+predictions <- predict(tree_model, test_data, type = "class")
+# Evaluate performance with confusion matrix
+confusion <- confusionMatrix(predictions, test_data$Outcome)
+print(confusion)
+
+# Accuracy
+cat("Accuracy:", confusion$overall["Accuracy"], "\n")
+```
+
+
+
+```{r}
+# Prune the tree to the best cp (lowest xerror)
+best_cp <- tree_model$cptable[which.min(tree_model$cptable[,"xerror"]),"CP"]
+pruned_tree <- prune(tree_model, cp = best_cp)
+
+# Plot pruned tree
+rpart.plot(pruned_tree, type = 2, extra = 104, fallen.leaves = TRUE)
+
+# Predict with pruned tree
+pruned_preds <- predict(pruned_tree, test_data, type = "class")
+
+# Evaluate pruned tree
+confusion_pruned <- confusionMatrix(pruned_preds, test_data$Outcome)
+print(confusion_pruned)
+
+# Plot coress validation error
+plotcp(tree_model, las = 1, upper = 'splits')
+```
+
+
+```{r}
+df_sub <- df %>% select(Glucose, BMI, Outcome)
+
+# Fit simple tree on these 2 variables
+simple_tree <- rpart(Outcome ~ Glucose + BMI, data = df_sub, method = "class", cp = 0.01)
+
+# Create grid to predict
+glucose_range <- seq(min(df_sub$Glucose), max(df_sub$Glucose), length.out = 100)
+bmi_range <- seq(min(df_sub$BMI), max(df_sub$BMI), length.out = 100)
+
+grid <- expand.grid(Glucose = glucose_range, BMI = bmi_range)
+
+# Predict class on grid
+grid$Outcome <- predict(simple_tree, grid, type = "class")
+
+# Plot decision boundary
+ggplot() +
+  geom_point(data = grid, aes(x = Glucose, y = BMI, color = Outcome), alpha = 0.3) +
+  geom_point(data = df_sub, aes(x = Glucose, y = BMI, shape = Outcome), size = 2) +
+  labs(title = "Decision Boundary (Glucose vs BMI)", x = "Glucose", y = "BMI") +
+  theme_minimal()
+```
+
+```{r}
+# Train Random Forest
+rf_model <- randomForest(Outcome ~ ., data = train_data)
+
+# Predict
+rf_preds <- predict(rf_model, test_data)
+
+# Evaluate RF
+confusion_rf <- confusionMatrix(rf_preds, test_data$Outcome)
+print(confusion_rf)
+
+# Compare accuracy
+cat("Pruned Decision Tree Accuracy:", confusion_pruned$overall["Accuracy"], "\n")
+cat("Random Forest Accuracy:", confusion_rf$overall["Accuracy"], "\n")
+
+```
+
+```{r}
+# (1) Improved Decision Tree with Cross-validation cp tuning
+# ---------------------------------------------
+
+# Train with xval (default xval=10 for cross-validation)
+tree_model_cv <- rpart(Outcome ~ ., data = train_data, method = "class", cp = 0.01)
+
+# Plot CP Table
+printcp(tree_model_cv)
+
+# Get best cp
+best_cp <- tree_model_cv$cptable[which.min(tree_model_cv$cptable[,"xerror"]),"CP"] #0.01 best cp
+
+# Prune the tree
+pruned_tree_cv <- prune(tree_model_cv, cp = best_cp)
+
+# Plot pruned tree
+rpart.plot(pruned_tree_cv, type = 2, extra = 104, fallen.leaves = TRUE)
+
+
+```
+```{r}
+# Predict on test data
+tree_preds <- predict(pruned_tree_cv, test_data, type = "prob")[,2]
+# ROC and AUC
+roc_tree <- roc(test_data$Outcome, tree_preds)
+
+# Train Random Forest
+# --------------------
+rf_model <- randomForest(Outcome ~ ., data = train_data)
+# Predict probability on test data
+rf_preds_prob <- predict(rf_model, test_data, type = "prob")[,2]
+
+# ROC for Random Forest
+roc_rf <- roc(test_data$Outcome, rf_preds_prob)
+
+# --------------------
+# Plot ROC curves
+# --------------------
+
+# Plot Tree ROC first
+plot(roc_tree, col = "blue", main = "ROC Curve: Pruned Tree vs Random Forest")
+
+# Add Random Forest ROC to the same plot
+lines(roc_rf, col = "red")
+
+# Add Legend
+legend("bottomright", legend = c(
+  paste0("Pruned Tree AUC = ", round(auc(roc_tree), 3)),
+  paste0("Random Forest AUC = ", round(auc(roc_rf), 3))
+), col = c("blue", "red"), lwd = 2)
+```
+
+
+- visual in 2d - for two variables
+```{r}
+# Use only two variables (Glucose and BMI)
+df_sub <- df %>% select(Glucose, BMI, Outcome)
+
+# Train simple tree for decision boundary
+simple_tree <- rpart(Outcome ~ Glucose + BMI, data = df_sub, method = "class", cp = 0.01)
+
+# Create grid
+glucose_range <- seq(min(df_sub$Glucose), max(df_sub$Glucose), length.out = 200)
+bmi_range <- seq(min(df_sub$BMI), max(df_sub$BMI), length.out = 200)
+
+grid <- expand.grid(Glucose = glucose_range, BMI = bmi_range)
+
+# Predict class on grid
+grid$Outcome <- predict(simple_tree, grid, type = "class")
+
+# Plot decision boundary with geom_tile (better color)
+ggplot() +
+  geom_tile(data = grid, aes(x = Glucose, y = BMI, fill = Outcome), alpha = 0.5) +
+  geom_point(data = df_sub, aes(x = Glucose, y = BMI, color = Outcome), size = 2) +
+  labs(title = "Decision Boundary (Glucose vs BMI)", x = "Glucose", y = "BMI") +
+  theme_minimal()
 ```
 
 
@@ -20,13 +199,10 @@ library(dplyr)
 # Partial Dependence Plot
 
 ```{r}
-# Convert Outcome to factor
-df$Outcome <- as.factor(df$Outcome)
 
 # Train Random Forest model
-set.seed(123)
+set.seed(5293)
 rf_model <- randomForest(Outcome ~ ., data = df)
-
 # Define variable names (independent variables)
 vars <- colnames(df)[colnames(df) != "Outcome"]
 
@@ -61,7 +237,7 @@ set.seed(123)
 rf_model <- randomForest(x = df[, -which(names(df) == "Outcome")],
                          y = df$Outcome,
                          importance = TRUE)
-
+rf_model$importance
 # Get importance
 imp <- importance(rf_model, type = 2)  # type=2 is Mean Decrease Gini (recommended)
 
@@ -86,11 +262,112 @@ ggplot(imp_df, aes(x = importance_scaled, y = reorder(variable, importance_scale
   theme(plot.title = element_text(size = 14, face = "bold"))
 ```
 
+- LIME
+
+```{r}
+# Split dataset into train and test
+set.seed(5293)
+n <- nrow(df)
+test_index <- sample(n, 2)  # You can also use more test samples if you want
+train_data <- df[-test_index, ]
+test_data <- df[test_index, ]
 
 
+# Train Random Forest
+rf_model <- randomForest(Outcome ~ ., data = train_data)
 
+# Tell lime what type of model this is
+model_type.randomForest <- function(x, ...) {
+  return("classification")
+}
 
+# Prepare explainer using training data (remove Outcome column)
+explainer <- lime::lime(subset(train_data, select = -Outcome), rf_model)
 
+# Explain prediction for test_data
+explanation <- lime::explain(x = subset(test_data, select = -Outcome),
+                             explainer = explainer, labels = 'No Diabetes', n_features = 7,
+                             n_permutations = 1000, feature_select = 'lasso_path')
+
+# View explanation
+print(explanation)
+
+# Optional: visualize explanation
+plot_features(explanation)
+```
+
+```{r}
+# Explain prediction for test_data
+explanation2 <- lime::explain(x = subset(test_data, select = -Outcome),
+                             explainer = explainer, labels = 'Diabetes', n_features = 7,
+                             n_permutations = 1000, feature_select = 'lasso_path')
+
+# View explanation
+print(explanation2)
+
+# Optional: visualize explanation
+plot_features(explanation2)
+```
+
+```{r}
+
+# Filter for only 'survived' patients
+diabetes <- df %>%
+  filter(Outcome == "Diabetes")
+
+# Randomly sample 10 survived patients
+set.seed(123)
+index <- sample(nrow(diabetes), 10)
+diabetes_samp <- diabetes[index, ]
+
+# Compute Gower distance matrix (excluding Outcome column)
+gower_dist <- daisy(diabetes_samp[, -which(names(diabetes_samp) == "Outcome")])
+
+# Convert to dataframe for plotting
+df_gower <- as.data.frame(as.matrix(gower_dist)) %>%
+  rownames_to_column('obs1') %>%
+  pivot_longer(cols = -obs1, names_to = "obs2", values_to = "gower") %>%
+  mutate(obs1 = as.numeric(obs1),
+         obs2 = as.numeric(obs2)) %>%
+  filter(obs1 < obs2)
+
+# Plot Gower distances
+ggplot(df_gower, aes(x = gower)) +
+  geom_dotplot() +
+  labs(title = "Gower Distances for Pairs of Diabetes Patients",
+       x = "Gower Distance",
+       y = "Count") +
+  theme_minimal()
+
+```
+
+```{r}
+nodiabetes <- df %>%
+  filter(Outcome == "No Diabetes")
+
+set.seed(123)
+index <- sample(nrow(nodiabetes), 10)
+nodiabetes_samp <- nodiabetes[index, ]
+
+# Compute Gower distance matrix (excluding Outcome column)
+gower_dist <- daisy(nodiabetes_samp[, -which(names(nodiabetes_samp) == "Outcome")])
+
+# Convert to dataframe for plotting
+df_gower <- as.data.frame(as.matrix(gower_dist)) %>%
+  rownames_to_column('obs1') %>%
+  pivot_longer(cols = -obs1, names_to = "obs2", values_to = "gower") %>%
+  mutate(obs1 = as.numeric(obs1),
+         obs2 = as.numeric(obs2)) %>%
+  filter(obs1 < obs2)
+
+# Plot Gower distances
+ggplot(df_gower, aes(x = gower)) +
+  geom_dotplot() +
+  labs(title = "Gower Distances for Pairs of Survived Patients",
+       x = "Gower Distance",
+       y = "Count") +
+  theme_minimal()
+```
 
 
 
