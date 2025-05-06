@@ -234,8 +234,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>   book        
- Mode:logical  </code></pre>
+<pre><code>  Pregnancies        Glucose      BloodPressure    SkinThickness  
+ Min.   : 0.000   Min.   :  0.0   Min.   :  0.00   Min.   : 0.00  
+ 1st Qu.: 1.000   1st Qu.: 99.0   1st Qu.: 62.00   1st Qu.: 0.00  
+ Median : 3.000   Median :117.0   Median : 72.00   Median :23.00  
+ Mean   : 3.845   Mean   :120.9   Mean   : 69.11   Mean   :20.54  
+ 3rd Qu.: 6.000   3rd Qu.:140.2   3rd Qu.: 80.00   3rd Qu.:32.00  
+ Max.   :17.000   Max.   :199.0   Max.   :122.00   Max.   :99.00  
+    Insulin           BMI        DiabetesPedigreeFunction      Age       
+ Min.   :  0.0   Min.   : 0.00   Min.   :0.0780           Min.   :21.00  
+ 1st Qu.:  0.0   1st Qu.:27.30   1st Qu.:0.2437           1st Qu.:24.00  
+ Median : 30.5   Median :32.00   Median :0.3725           Median :29.00  
+ Mean   : 79.8   Mean   :31.99   Mean   :0.4719           Mean   :33.24  
+ 3rd Qu.:127.2   3rd Qu.:36.60   3rd Qu.:0.6262           3rd Qu.:41.00  
+ Max.   :846.0   Max.   :67.10   Max.   :2.4200           Max.   :81.00  
+    Outcome     
+ Min.   :0.000  
+ 1st Qu.:0.000  
+ Median :0.000  
+ Mean   :0.349  
+ 3rd Qu.:1.000  
+ Max.   :1.000  </code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -243,8 +262,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(df, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">==</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>book 
-   0 </code></pre>
+<pre><code>             Pregnancies                  Glucose            BloodPressure 
+                     111                        5                       35 
+           SkinThickness                  Insulin                      BMI 
+                     227                      374                       11 
+DiabetesPedigreeFunction                      Age                  Outcome 
+                       0                        0                      500 </code></pre>
 </div>
 </div>
 </section>
@@ -269,8 +292,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(df, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">==</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>book 
-   0 </code></pre>
+<pre><code>             Pregnancies                  Glucose            BloodPressure 
+                     111                        0                        0 
+           SkinThickness                  Insulin                      BMI 
+                       0                        0                        0 
+DiabetesPedigreeFunction                      Age                  Outcome 
+                       0                        0                      500 </code></pre>
 </div>
 </div>
 <p>In my study, the variable I propose to categorize and make inferences about “outcome”, indicates the potential diagnosis of diabetes. This variable determines whether a diabetes test result is positive (category value 1) or negative (category value 0). A remarkable aspect of our dataset is the “pregnancy” variable, with a minimum value of 0, a maximum value of 17, and a mean value of 3.845. It would be particularly informative to explore whether pregnancy is an important factor influencing the outcome of a diabetes diagnosis and to assess the degree to which it does so. In addition, common predictors such as body mass index (BMI) and age are expected to play an important role in determining outcomes.</p>

@@ -32,6 +32,7 @@ summary(df)
 
 # View summary of zeros
 sapply(df, function(x) sum(x == 0))
+
 ```
 
 ## Missing value analysis

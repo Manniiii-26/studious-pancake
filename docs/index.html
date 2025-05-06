@@ -152,6 +152,8 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#logistic-regression" id="toc-logistic-regression" class="nav-link" data-scroll-target="#logistic-regression"><span class="header-section-number">2.1</span> Logistic Regression</a></li>
   <li><a href="#tree-classification" id="toc-tree-classification" class="nav-link" data-scroll-target="#tree-classification"><span class="header-section-number">2.2</span> Tree Classification</a></li>
+  <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest"><span class="header-section-number">2.3</span> Random Forest</a></li>
+  <li><a href="#lime" id="toc-lime" class="nav-link" data-scroll-target="#lime"><span class="header-section-number">2.4</span> LIME</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Manniiii-26/studious-pancake.git/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Manniiii-26/studious-pancake.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -213,6 +215,18 @@ ul.task-list li input[type="checkbox"] {
 <h2 data-number="2.2" class="anchored" data-anchor-id="tree-classification"><span class="header-section-number">2.2</span> Tree Classification</h2>
 <ul>
 <li>The idea behind trees is to create multiple regions corresponding to different values (or intervals) of the predictors. Prediction is then conducted by assigning to a new observation the mean/median/mode (or maximum class probability) of the response computed over the region to which the new observation belongs to. Tree classification will also give us a meaningful visual representation of the variables.</li>
+</ul>
+</section>
+<section id="random-forest" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="random-forest"><span class="header-section-number">2.3</span> Random Forest</h2>
+<ul>
+<li>Random Forest, registered as a trademark by Leo Breiman and Adele Cutler. The algorithm’s ease of use and flexibility have contributed to its adoption since it can handle both classification and regression problems. It can help in identifying which features or variables are most important in making predictions. This is particularly useful for understanding the underlying patterns in the data and it also helps reduce the variance and gain uncorrelated trees.</li>
+</ul>
+</section>
+<section id="lime" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="lime"><span class="header-section-number">2.4</span> LIME</h2>
+<ul>
+<li>Local Interpretable Model-agnostic Explanations, starts by choosing a specific sample, x’, which is our data point of interest. It then perturbs this sample by creating fake data points in the neighborhood of x’. These fake data points are fed into the black box model to obtain predictions. Each fake data point is weighted based on its distance or similarity to x’, giving more importance to those closer to the original sample. After this, LIME fits a simple and interpretable model to these weighted fake data points. This local model is tuned as necessary and helps us observe how the black box model’s predictions change in response to variations around x’. Ultimately, this process reveals which features were most important for that specific prediction.</li>
 </ul>
 
 
