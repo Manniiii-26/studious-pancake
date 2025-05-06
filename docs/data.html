@@ -212,7 +212,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="content" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="content"><span class="header-section-number">2.2</span> Content</h2>
 <ul>
-<li><p>Number of Smaple: 768</p></li>
+<li><p>Number of Sample: 768</p></li>
 <li><p>Number of Attribute: 8</p></li>
 <li><p>Pregnancies: number of times pregnant</p></li>
 <li><p>Glucose: plasma glucose concentration 2 hours in an oral glucose tolerance test</p></li>
@@ -245,45 +245,32 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/diabetes.csv"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/diabetes.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>  Pregnancies        Glucose      BloodPressure    SkinThickness  
- Min.   : 0.000   Min.   :  0.0   Min.   :  0.00   Min.   : 0.00  
- 1st Qu.: 1.000   1st Qu.: 99.0   1st Qu.: 62.00   1st Qu.: 0.00  
- Median : 3.000   Median :117.0   Median : 72.00   Median :23.00  
- Mean   : 3.845   Mean   :120.9   Mean   : 69.11   Mean   :20.54  
- 3rd Qu.: 6.000   3rd Qu.:140.2   3rd Qu.: 80.00   3rd Qu.:32.00  
- Max.   :17.000   Max.   :199.0   Max.   :122.00   Max.   :99.00  
-    Insulin           BMI        DiabetesPedigreeFunction      Age       
- Min.   :  0.0   Min.   : 0.00   Min.   :0.0780           Min.   :21.00  
- 1st Qu.:  0.0   1st Qu.:27.30   1st Qu.:0.2437           1st Qu.:24.00  
- Median : 30.5   Median :32.00   Median :0.3725           Median :29.00  
- Mean   : 79.8   Mean   :31.99   Mean   :0.4719           Mean   :33.24  
- 3rd Qu.:127.2   3rd Qu.:36.60   3rd Qu.:0.6262           3rd Qu.:41.00  
- Max.   :846.0   Max.   :67.10   Max.   :2.4200           Max.   :81.00  
-    Outcome     
- Min.   :0.000  
- 1st Qu.:0.000  
- Median :0.000  
- Mean   :0.349  
- 3rd Qu.:1.000  
- Max.   :1.000  </code></pre>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+line 1 appears to contain embedded nulls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+incomplete final line found by readTableHeader on 'data/diabetes.csv'</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View summary of zeros</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(df, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">==</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>             Pregnancies                  Glucose            BloodPressure 
-                     111                        5                       35 
-           SkinThickness                  Insulin                      BMI 
-                     227                      374                       11 
-DiabetesPedigreeFunction                      Age                  Outcome 
-                       0                        0                      500 </code></pre>
+<pre><code>   book        
+ Mode:logical  </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View summary of zeros</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(df, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">==</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>book 
+   0 </code></pre>
 </div>
 </div>
 </section>
@@ -295,25 +282,21 @@ DiabetesPedigreeFunction                      Age                  Outcome
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Columns where 0 is considered missing (except 'Pregnancies' and 'Outcome')</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>missing_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Glucose"</span>, <span class="st">"BloodPressure"</span>, <span class="st">"SkinThickness"</span>, <span class="st">"Insulin"</span>, <span class="st">"BMI"</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace 0 with median of non-zero values in the specified columns</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> missing_cols) {</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  median_value <span class="ot">&lt;-</span> <span class="fu">median</span>(df[[col]][df[[col]] <span class="sc">!=</span> <span class="dv">0</span>], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  df[[col]][df[[col]] <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> median_value</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Check result</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(df, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">==</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Columns where 0 is considered missing (except 'Pregnancies' and 'Outcome')</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>missing_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Glucose"</span>, <span class="st">"BloodPressure"</span>, <span class="st">"SkinThickness"</span>, <span class="st">"Insulin"</span>, <span class="st">"BMI"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace 0 with median of non-zero values in the specified columns</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> missing_cols) {</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  median_value <span class="ot">&lt;-</span> <span class="fu">median</span>(df[[col]][df[[col]] <span class="sc">!=</span> <span class="dv">0</span>], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  df[[col]][df[[col]] <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> median_value</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Check result</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(df, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">==</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>             Pregnancies                  Glucose            BloodPressure 
-                     111                        0                        0 
-           SkinThickness                  Insulin                      BMI 
-                       0                        0                        0 
-DiabetesPedigreeFunction                      Age                  Outcome 
-                       0                        0                      500 </code></pre>
+<pre><code>book 
+   0 </code></pre>
 </div>
 </div>
 <p>In my study, the variable I propose to categorize and make inferences about “outcome”, indicates the potential diagnosis of diabetes. This variable determines whether a diabetes test result is positive (category value 1) or negative (category value 0). A remarkable aspect of our dataset is the “pregnancy” variable, with a minimum value of 0, a maximum value of 17, and a mean value of 3.845. It would be particularly informative to explore whether pregnancy is an important factor influencing the outcome of a diabetes diagnosis and to assess the degree to which it does so. In addition, common predictors such as body mass index (BMI) and age are expected to play an important role in determining outcomes.</p>
