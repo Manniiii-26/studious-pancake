@@ -8,6 +8,9 @@
 ### Random Forest
 - Random Forest, registered as a trademark by Leo Breiman and Adele Cutler. The algorithm's ease of use and flexibility have contributed to its adoption since it can handle both classification and regression problems. It can help in identifying which features or variables are most important in making predictions. This is particularly useful for understanding the underlying patterns in the data and it also helps reduce the variance and gain uncorrelated trees.
 
+### Partial Dependence Plot(PDP)
+- Given the project goal, PDP open up the black box and show how each variable affects the probability of diabetes, while holding other variables constant. PDP can shows marginal effect of one or two features on the predicted outcome, the marginal effect is about the effect of a feature on the model while holding other features constant. Provide actionable insights which allow interpretation that can help with education, prevention, and targeted interventions about our project.
+
 ### LIME
 - Local Interpretable Model-agnostic Explanations, starts by choosing a specific sample, x', which is our data point of interest. It then perturbs this sample by creating fake data points in the neighborhood of x'. These fake data points are fed into the black box model to obtain predictions. Each fake data point is weighted based on its distance or similarity to x', giving more importance to those closer to the original sample. After this, LIME fits a simple and interpretable model to these weighted fake data points. This local model is tuned as necessary and helps us observe how the black box model’s predictions change in response to variations around x'. Ultimately, this process reveals which features were most important for that specific prediction.
 

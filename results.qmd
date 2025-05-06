@@ -15,18 +15,35 @@ library(pROC)
 library(gridExtra)
 library(lime)
 library(cluster)
+```
+
+## Prepare the data
+
+- The data is imported and cleaned. The outcome variable is recoded from numeric (0/1) into descriptive labels ("No Diabetes" and "Diabetes"), improving clarity in the analysis and visualization. All missing values replaced with median.
+
+```{r}
+# Prepare the data
 
 df <- read.csv("data/diabetes.csv")
 df <- df %>%
   mutate(Outcome = ifelse(Outcome == 0, "No Diabetes", "Diabetes"))
 df$Outcome <- as.factor(df$Outcome)
+missing_cols <- c("Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI")
+
+# Replace 0 with median
+for (col in missing_cols) {
+  median_value <- median(df[[col]][df[[col]] != 0], na.rm = TRUE)
+  df[[col]][df[[col]] == 0] <- median_value
+}
+#sapply(df, function(x) sum(x == 0))
+
 ```
+## Decision Tree Classification Model
+
+- This code below implements a Decision Tree classification model to predict diabetes outcomes using patients' diagnostic data. The dataset used consists of multiple diagnostic measurements and an outcome variable, which indicates whether a patient has diabetes ("Diabetes") or not ("No Diabetes"). The task below divided the dataset into training (70%) and testing (30%) sets to allow model training and performance evaluation. A decision tree is built where the outcome variable is predicted based on all available predictors from this dataset.
 
 ```{r}
 set.seed(5293)
-
-
-
 # Split the data into training and testing sets (70% train, 30% test)
 train_index <- createDataPartition(df$Outcome, p = 0.7, list = FALSE)
 
@@ -37,15 +54,16 @@ test_data <- df[-train_index, ]
 tree_model <- rpart(Outcome ~ ., data = train_data, method = "class")
 
 # Plot the tree
-rpart.plot(tree_model, type = 2, extra = 104, fallen.leaves = TRUE, box.palette = 'BuOr')
+rpart.plot(tree_model, type = 2, fallen.leaves = TRUE, box.palette = 'BuOr')
 #, extra = 3 - Display the misclassification rate
 
 ```
 
-- Make predictions on the test set
+The decision tree graph result illustrates the process through which the model makes predictions about diabetes outcomes. Each internal node represents a decision rule based on one of the predictors. The tree splits first on Glucose with a value of 144. This indicates that Glucose levels play the most significant role in predicting diabetes. Patients with Glucose below this threshold are more likely to be "No Diabetes," while those above are more likely to be "Diabetes". Variables BMI, DiabetesPedigreeFunction and Age are other important factors. Subsequent splits on these variables suggest that they also meaningfully contribute to the model's decision process. For example, among patients with lower Glucose levels, those with lower BMI and lower DiabetesPedigreeFunction are classified as "No Diabetes" more often. One of the advantage of the tree is that its structure reflects interactions between variables. For example, even when Glucose is high, lower DiabetesPedigreeFunction and younger Age may reduce the probability of being classified as "Diabetes". The '0.65' in the first node indicates the proportion of sample in this node that belong to the predicted class which in here, it is 'No Diabetes'. In other words, 0.35 of the sample in this node are 'Diabetes'. The higher this number, the more confident the prediction. The '100%' in the first node is the percentage of total samples in the entire dataset that fall into this node, it begins with the whole dataset or the training dataset and it starts with 100%.
+
+### Make predictions on the test set - display result with confusion matrix
 ```{r}
 predictions <- predict(tree_model, test_data, type = "class")
-# Evaluate performance with confusion matrix
 confusion <- confusionMatrix(predictions, test_data$Outcome)
 print(confusion)
 
@@ -53,137 +71,69 @@ print(confusion)
 cat("Accuracy:", confusion$overall["Accuracy"], "\n")
 ```
 
+From the confusion matrix, we may see that there are 54 cases of true positive, which mean the patient have diabetes and we correctly predicted they do have diabetes. There are 125 cases of true negatives, 25 cases of false positives and 26 cases of false negatives. We may also refer to the accuracy rate, it tells us how much the model correctly predicted the outcome, that is, about 78% of the time it makes correct prediction. The sensitivity measures the model's ability to correctly identify patients who actually have diabetes. In this case, we prefer a higher sensitivity because it is more important to detect as many diabetes cases as possible and missing a diabetes diagnosis could be serious. The specificity measures how well the model identifies patients who do not have diabetes. Around 83% of 'No Diabetes' cases are correctly identifies, this model is relatively good to avoiding false alarms, and people would not want unnecessary treatment.
 
+Although this unpruned decision tree captures a large number of splits and thus perfectly fits the training data, it introduces issues related to overfitting(too complex), reduced interpretability, and poorer generalization to new patients. An unpruned tree sensitive to every small changes in the training data and that could lead to large changes in the tree structure. By pruning the tree to remove unnecessary splits, the model can focus on the most important predictors, maintain a simpler and clearer structure, and perform more reliably when applied to unseen data. This is especially important in a healthcare context, where models need to be both accurate and interpretable to support decision-making.
 
+### Pruning and Improving Decision Tree Model - Plot cross validation error
 ```{r}
-# Prune the tree to the best cp (lowest xerror)
-best_cp <- tree_model$cptable[which.min(tree_model$cptable[,"xerror"]),"CP"]
-pruned_tree <- prune(tree_model, cp = best_cp)
-
-# Plot pruned tree
-rpart.plot(pruned_tree, type = 2, extra = 104, fallen.leaves = TRUE)
-
-# Predict with pruned tree
-pruned_preds <- predict(pruned_tree, test_data, type = "class")
-
-# Evaluate pruned tree
-confusion_pruned <- confusionMatrix(pruned_preds, test_data$Outcome)
-print(confusion_pruned)
-
-# Plot coress validation error
 plotcp(tree_model, las = 1, upper = 'splits')
 ```
+Pruning the tree by the complexity parameter (cp) plot is an important step for selecting the optimal size of a decision tree for balancing the model complexity and predictive performance, it controls the pruning. The plot above shows the relationship between the tree's complexity (number of splits) and its cross validation error rate. At the lowest cp values (0.01), the error starts to flatten or even increase slightly, this suggest that adding more splits does not improve performance and this suggests overfitting starts here.
+
+The cp plot suggests that a cp value around 0.014 to 0.011 minimizes cross-validation error without overfitting. By pruning the tree at this cp, we can achieve a simpler, more robust model that improves generalization to new data while maintaining strong performance in detecting diabetes cases. Next, I will generate a pruned tree with best cp value.
 
 
+### For future improvements - prune the tess to the best cp value with have the lowest xerror (cross validation error)
 ```{r}
-df_sub <- df %>% select(Glucose, BMI, Outcome)
-
-# Fit simple tree on these 2 variables
-simple_tree <- rpart(Outcome ~ Glucose + BMI, data = df_sub, method = "class", cp = 0.01)
-
-# Create grid to predict
-glucose_range <- seq(min(df_sub$Glucose), max(df_sub$Glucose), length.out = 100)
-bmi_range <- seq(min(df_sub$BMI), max(df_sub$BMI), length.out = 100)
-
-grid <- expand.grid(Glucose = glucose_range, BMI = bmi_range)
-
-# Predict class on grid
-grid$Outcome <- predict(simple_tree, grid, type = "class")
-
-# Plot decision boundary
-ggplot() +
-  geom_point(data = grid, aes(x = Glucose, y = BMI, color = Outcome), alpha = 0.3) +
-  geom_point(data = df_sub, aes(x = Glucose, y = BMI, shape = Outcome), size = 2) +
-  labs(title = "Decision Boundary (Glucose vs BMI)", x = "Glucose", y = "BMI") +
-  theme_minimal()
+best_cp <- tree_model$cptable[which.min(tree_model$cptable[,"xerror"]),"CP"]
+pruned_tree <- prune(tree_model, cp = best_cp)
+# See the improve version of tree
+rpart.plot(pruned_tree, type = 2, fallen.leaves = TRUE)
 ```
 
+This pruned tree is overall simpler and has fewer nodes. A lot of the small and specific nodes are being removed. This plot is now easier to interpret, less focused to the noise in the training data and less likely to overfit. Variable 'Glucose' is still the first split, indicate that this is still the most important predictor same as the unpruned tree. Other important variables such as 'DiabetesPedigreeFunction', 'BMI', 'Pregnancies' and 'Age' are still retained, meaning these are the still the strongly related factors to predicting diabetes outcomes. Overall, pruning improves the decision tree’s generalization ability while preserving its predictive power and interpretability, it matches well with the project’s goal of creating an understandable and effective predictive model for diabetes diagnosis.
+
 ```{r}
-# Train Random Forest
-rf_model <- randomForest(Outcome ~ ., data = train_data)
+# New prediction
+pruned_preds <- predict(pruned_tree, test_data, type = "class")
 
-# Predict
-rf_preds <- predict(rf_model, test_data)
-
-# Evaluate RF
-confusion_rf <- confusionMatrix(rf_preds, test_data$Outcome)
-print(confusion_rf)
-
-# Compare accuracy
-cat("Pruned Decision Tree Accuracy:", confusion_pruned$overall["Accuracy"], "\n")
-cat("Random Forest Accuracy:", confusion_rf$overall["Accuracy"], "\n")
-
+confusion_pruned <- confusionMatrix(pruned_preds, test_data$Outcome)
+print(confusion_pruned)
 ```
 
-```{r}
-# (1) Improved Decision Tree with Cross-validation cp tuning
-# ---------------------------------------------
+The accurary rate have a very slightly increase, it went from 0.7783 to 0.787, this means the pruned tree correctly classified nearly 79% in the test set. Sensitivity is now 0.6875 and this tells us the pruned tree correctly identified roughly 69% of true diabetes cases. Compared to the unpruned version, which had about 0.675, this is slightly improved and pruning did not sacrifice the ability to detect diabetes. Specificity is 0.84, the model correctly classified 84% of people without diabetes. This shows the pruned tree maintains very good performance in correctly classifying "No Diabetes" cases.
 
+### Further Improve the performance by Cross Validation CP Tuning
+```{r}
 # Train with xval (default xval=10 for cross-validation)
 tree_model_cv <- rpart(Outcome ~ ., data = train_data, method = "class", cp = 0.01)
-
-# Plot CP Table
-printcp(tree_model_cv)
-
-# Get best cp
+#printcp(tree_model_cv)
 best_cp <- tree_model_cv$cptable[which.min(tree_model_cv$cptable[,"xerror"]),"CP"] #0.01 best cp
-
-# Prune the tree
 pruned_tree_cv <- prune(tree_model_cv, cp = best_cp)
+rpart.plot(pruned_tree_cv, type = 2, fallen.leaves = TRUE)
 
-# Plot pruned tree
-rpart.plot(pruned_tree_cv, type = 2, extra = 104, fallen.leaves = TRUE)
+cv_pruned_preds <- predict(tree_model_cv, test_data, type = "class")
+confusion_cv_pruned <- confusionMatrix(cv_pruned_preds, test_data$Outcome)
+print(confusion_cv_pruned)
 
-
-```
-```{r}
-# Predict on test data
-tree_preds <- predict(pruned_tree_cv, test_data, type = "prob")[,2]
-# ROC and AUC
-roc_tree <- roc(test_data$Outcome, tree_preds)
-
-# Train Random Forest
-# --------------------
-rf_model <- randomForest(Outcome ~ ., data = train_data)
-# Predict probability on test data
-rf_preds_prob <- predict(rf_model, test_data, type = "prob")[,2]
-
-# ROC for Random Forest
-roc_rf <- roc(test_data$Outcome, rf_preds_prob)
-
-# --------------------
-# Plot ROC curves
-# --------------------
-
-# Plot Tree ROC first
-plot(roc_tree, col = "blue", main = "ROC Curve: Pruned Tree vs Random Forest")
-
-# Add Random Forest ROC to the same plot
-lines(roc_rf, col = "red")
-
-# Add Legend
-legend("bottomright", legend = c(
-  paste0("Pruned Tree AUC = ", round(auc(roc_tree), 3)),
-  paste0("Random Forest AUC = ", round(auc(roc_rf), 3))
-), col = c("blue", "red"), lwd = 2)
 ```
 
 
-- visual in 2d - for two variables
+The code above applies cross-validation tuning to improve the performance of a decision tree. The rpart model is trained with xval = 10 (default), which means it automatically performs 10-fold cross-validation during the tree-growing process. The idea is to assess how well trees of various complexities (sizes) perform on unseen data. 
+
+After building the initial tree, the model has a cptable recording the performance and error rate for trees of different sizes, that is, different cp values. Again, the best cp is selected where the cross-validation error (xerror) is the lowest. This means we find the most balanced point between underfitting and overfitting. As a result, no significance improvement.
+
+
+### Visual in 2D - for Two Variables 'Glucose' and 'BMI'
 ```{r}
-# Use only two variables (Glucose and BMI)
 df_sub <- df %>% select(Glucose, BMI, Outcome)
-
-# Train simple tree for decision boundary
 simple_tree <- rpart(Outcome ~ Glucose + BMI, data = df_sub, method = "class", cp = 0.01)
 
-# Create grid
 glucose_range <- seq(min(df_sub$Glucose), max(df_sub$Glucose), length.out = 200)
 bmi_range <- seq(min(df_sub$BMI), max(df_sub$BMI), length.out = 200)
-
 grid <- expand.grid(Glucose = glucose_range, BMI = bmi_range)
 
-# Predict class on grid
 grid$Outcome <- predict(simple_tree, grid, type = "class")
 
 # Plot decision boundary with geom_tile (better color)
@@ -194,29 +144,126 @@ ggplot() +
   theme_minimal()
 ```
 
+This decision boundary plot contains variabls 'Glucose' and 'BMI', give us intuitive visualization of the model’s decision process. This plot shows exactly how the decision tree splits the data using simple rules. It makes the model interpretable, clear vertical separation shows 'Glucose' is the primary decision factor, and 'BMI' is limited horizontal influence shows it plays a secondary role. This helps explain and justify which variables are most useful in prediction. From this plot, we can easily spot where the model makes mistakes and roughly how accurate our model performs. 
 
-
-# Partial Dependence Plot
+### Another Plot in 2D - Easier to Spot the Misclassification Points
 
 ```{r}
+df_twovar <- df |> 
+  mutate(Glucose_std = scale(Glucose),
+         BMI_std = scale(BMI))
 
+train_data_sub <- df_twovar[train_index, ]
+test_data_sub <- df_twovar[-train_index, ]
+
+# Train Decision Tree (simple for visualization)
+simple_tree <- rpart(Outcome ~ Glucose + BMI, data = train_data_sub, method = "class", cp = 0.01)
+
+# Predict on test data
+test_data_sub$pred <- predict(simple_tree, test_data_sub, type = "class")
+
+# Create correct/incorrect column
+test_data_sub <- test_data_sub %>%
+  mutate(correct = ifelse(Outcome == pred, "Test - Correct", "Test - Incorrect"))
+
+# Combine with train data
+train_data_sub$set <- "train"
+test_data_sub$set <- "test"
+
+plot_data <- bind_rows(train_data_sub, test_data_sub)
+
+# Plot
+ggplot(plot_data, aes(x = Glucose_std, y = BMI_std)) +
+  geom_point(data = filter(plot_data, set == "train"),
+             aes(color = Outcome),
+             size = 3, alpha = 0.5) +
+  
+  geom_point(data = filter(plot_data, set == "test", correct == "Test - Correct"),
+             aes(shape = correct, color = Outcome),
+             size = 4, stroke = 1.5) +
+  
+  geom_point(data = filter(plot_data, set == "test", correct == "Test - Incorrect"),
+             aes(shape = correct, color = Outcome),
+             size = 5, stroke = 1.5) +
+  
+  scale_shape_manual(values = c("Test - Incorrect" = 4)) +
+  
+  labs(title = "Decision Tree Prediction Results on Diabetes Data (Glucose vs BMI)",
+       x = "Standardized Glucose",
+       y = "Standardized BMI",
+       shape = "Prediction Result",
+       color = "True Outcome") +
+  
+  theme_minimal()
+
+```
+
+This graph highlights the misclassifications of the decision tree model using Glucose and BMI to predict diabetes. While correct predictions are well-separated, many incorrect predictions occur in the overlapping middle regions, where Glucose and BMI alone are insufficient to distinguish between classes. Compared to the decision boundary plot, which shows how the model partitions the feature space, this plot provides clearer insight into individual misclassifications.
+
+
+## Random Forest
+
+We are now moving from decision tree to random forest. The decision tree is simply and easy to interpert, but it has high rish of overfitting, when there is only one tree it could be very sensitive to noise and even a tiny changes in out dataset, it may not preform well with complex dataset. On the other hand, random forest is more complex but it improves the performance, it has much lower risk of overfitting because it averaging many trees. It is an ensemble of tree and that make this method more robust and stable. Generally, it produces much higher accuracy in most real-world dataset and we will see how it performs below.
+
+Moving to Random Forest is a way to achieve better prediction performance and reduce model variance after pruning and testing single trees. It improves performance and generalization at the cost of losing a bit of interpretability.
+
+```{r}
+set.seed(5293)
+rf_model <- randomForest(Outcome ~ ., data = train_data)
+rf_preds <- predict(rf_model, test_data)
+
+confusion_rf <- confusionMatrix(rf_preds, test_data$Outcome)
+print(confusion_rf)
+
+# Compare accuracy
+cat("Pruned Decision Tree Accuracy:", confusion_pruned$overall["Accuracy"], "\n")
+cat("Random Forest Accuracy:", confusion_rf$overall["Accuracy"], "\n")
+
+```
+As we can see above, the accuracy rate is 0.77, sensitivity is 0.64, and specificity is 0.84. The overall performance is similar to decision tree. The sensitivity rate which is diabetes patients are correctly identified and a bit lower than tree while specificity is slightly better.
+
+The improvement I expect from random forest is not strong here. By considering possible reasons like size of the dataset, or the variables itself provide clear decision boundarie, I think tree might have just handled as good as random forest. Although result not surperingly good, random forest itself is more stable
+
+## Compare Decision Tree and Random Forest
+
+```{r}
+# Predict on test data
+tree_preds <- predict(pruned_tree_cv, test_data, type = "prob")[,2]
+roc_tree <- roc(test_data$Outcome, tree_preds)
+# Train Random Forest
+rf_model <- randomForest(Outcome ~ ., data = train_data)
+rf_preds_prob <- predict(rf_model, test_data, type = "prob")[,2]
+roc_rf <- roc(test_data$Outcome, rf_preds_prob)
+
+plot(roc_tree, col = "blue", main = "ROC Curve: Pruned Tree vs Random Forest")
+lines(roc_rf, col = "red")
+legend("bottomright", legend = c(
+  paste0("Pruned Tree AUC = ", round(auc(roc_tree), 3)),
+  paste0("Random Forest AUC = ", round(auc(roc_rf), 3))
+), col = c("blue", "red"), lwd = 2)
+```
+The ROC curve comparison highlights the trade-off between interpretability and performance. While the pruned decision tree offers a simpler model which have 0.753 AUC values, the Random Forest significantly outperforms it in prediction accuracy and its AUC values is 0.838). In this project, where accurate prediction of diabetes is critical, the Random Forest is better than pruned tree. However, the pruned tree remains valuable for explaining decision rules and successfully finds out the  key risk factors.
+
+
+## Partial Dependence Plot
+
+While Random Forest offers strong predictive power, PDP often described as a "black-box" model. This means we know it makes good predictions, but we do not know which variables are driving these predictions or how they are impacting the predicted outcome. Although metrics like accuracy, sensitivity, specificity, and ROC/AUC show overall model performance, they do not tell us what the model has learned about individual variables. This method matches perfectly with my project's goal, to find out the key facters that lead to diabetes.
+
+```{r}
 # Train Random Forest model
 set.seed(5293)
-rf_model <- randomForest(Outcome ~ ., data = df)
-# Define variable names (independent variables)
+rf_model <- randomForest(Outcome ~ ., data = train_data)
 vars <- colnames(df)[colnames(df) != "Outcome"]
 
-# Create PDP for each variable, combine into tidy dataframe
+
 pdp_data <- map_dfr(vars, function(v) {
   pd <- pdp::partial(rf_model, pred.var = v, prob = TRUE, grid.resolution = 20) %>%
     as.data.frame() %>%
     mutate(variable = v)
-  # rename value and yhat columns to be consistent
   names(pd)[1:2] <- c("value", "yhat")
   return(pd)
 })
 
-# Plot using ggplot2 and facet_wrap
 ggplot(pdp_data, aes(x = value, y = yhat)) +
   geom_line(linewidth = 1) +
   facet_wrap(~variable, scales = "free_x") +
@@ -225,34 +272,33 @@ ggplot(pdp_data, aes(x = value, y = yhat)) +
   theme_minimal() +
   theme(plot.title = element_text(size = 14, face = "bold"))
 ```
+Each panel in the plot shows how the predicted probability of diabetes (yhat) changes when the value of a single predictor variable increases.
 
-## Variable Importance 
+And here is my main findings:
+- Glucose and BMI are clearly the most critical features, they are sharp and consistent increases in prediction probability which mean they are very important for diabetes prediction.
+
+- Age, DiabetesPedigreeFunction, and Pregnancies, contribute but have moderate to mild effects.
+
+- Insulin, BloodPressure, and SkinThickness are very flat lines meaning these variables have little effect on the prediction across their range, they are less important in the model's decision making.
+
+
+### Variable Importance - Confirm with PDP
+
+Partial Dependence Plots provided insight into how individual variables influence the predicted probability of diabetes, and it is also important to understand which variables contribute the most overall to the model’s predictive power. To achieve this, we use Variable Importance measures from the Random Forest model to quantify and rank the significance of each feature.
 
 ```{r}
-# Convert Outcome to factor
-df$Outcome <- as.factor(df$Outcome)
+set.seed(5293)
+rf_model <- randomForest(Outcome ~ ., data = train_data)
 
-# Train Random Forest (no formula interface, better for pdp and importance)
-set.seed(123)
-rf_model <- randomForest(x = df[, -which(names(df) == "Outcome")],
-                         y = df$Outcome,
-                         importance = TRUE)
-rf_model$importance
-# Get importance
-imp <- importance(rf_model, type = 2)  # type=2 is Mean Decrease Gini (recommended)
-
-# Convert to dataframe
+imp <- importance(rf_model, type = 2) 
 imp_df <- data.frame(
   variable = rownames(imp),
   importance = imp[, 1]
 )
-
-# Scale importance to sum to 100
 imp_df <- imp_df %>%
   mutate(importance_scaled = importance / sum(importance) * 100) %>%
   arrange(importance_scaled)
 
-# Plot
 ggplot(imp_df, aes(x = importance_scaled, y = reorder(variable, importance_scaled))) +
   geom_point(size = 3) +
   labs(title = "Variable Importance (Scaled to Sum to 100)",
@@ -260,86 +306,58 @@ ggplot(imp_df, aes(x = importance_scaled, y = reorder(variable, importance_scale
        y = "") +
   theme_minimal() +
   theme(plot.title = element_text(size = 14, face = "bold"))
+
 ```
 
-- LIME
+The plot above summarizes which predictors have the greatest impact on the Random Forest model’s performance. The results show that Glucose is by far the most influential variable, followed by BMI, Age, and DiabetesPedigreeFunction. These variables likely play key roles in determining whether a patient has diabetes. Bottom down the list, variables like Pregnancies, SkinThickness, and BloodPressure have relatively lower importance, suggesting they are less sigificant in making predictions in this dataset.
+
+###  MeanDecreaseAccuracy vs MeanDecreaseGini
 
 ```{r}
-# Split dataset into train and test
+df2 <- data.frame(mod_rf$importance)
+df2 |> 
+  rownames_to_column('feature') |> 
+  pivot_longer(cols = starts_with('Mean')) |> 
+  ggplot(aes(x = value, y = feature, color = name)) +
+  geom_point() +
+  theme_bw() +
+  theme(legend.position = 'top')
+```
+
+This plot shows two measures of variable importance calculated from the Random Forest model MeanDecreaseAccuracy which is the red dots, this measures how much the accuracy of the model decreases when the values of a variable are permuted. Higher values mean the variable is more important. The MeanDecreaseGini is the blue dots, this measures how much each variable contributes to decreasing the Gini impurity in the forest's nodes. In simpler terms, it reflects how often and how well this variable was used to split data in decision trees.
+
+
+## LIME - Local Interpretable Model-Agnostic Explanations
+
+Partial Dependence Plots provided valuable insights into the global importance and average effect of each feature on diabetes prediction, they do not explain how individual predictions are made. To better understand local behavior for specific cases, I use LIME to helps us reveal the exact features driving each prediction on a case by case basis.
+
+```{r}
 set.seed(5293)
 n <- nrow(df)
-test_index <- sample(n, 2)  # You can also use more test samples if you want
+test_index <- sample(n, 2)
 train_data <- df[-test_index, ]
 test_data <- df[test_index, ]
 
-
-# Train Random Forest
 rf_model <- randomForest(Outcome ~ ., data = train_data)
 
-# Tell lime what type of model this is
 model_type.randomForest <- function(x, ...) {
   return("classification")
 }
 
-# Prepare explainer using training data (remove Outcome column)
 explainer <- lime::lime(subset(train_data, select = -Outcome), rf_model)
-
-# Explain prediction for test_data
 explanation <- lime::explain(x = subset(test_data, select = -Outcome),
                              explainer = explainer, labels = 'No Diabetes', n_features = 7,
                              n_permutations = 1000, feature_select = 'lasso_path')
 
-# View explanation
-print(explanation)
-
-# Optional: visualize explanation
 plot_features(explanation)
 ```
+The graph shows explanations for two individual predictions, the Case 339 and Case 11, where the model predicted "No Diabetes". The bars indicate how much each feature contributed to the prediction. Red bars is Contradicts meaning features pushing the prediction away from "No Diabetes" and toward Diabetes. Blue bars is Supports, features pushing the prediction toward "No Diabetes".
 
-```{r}
-# Explain prediction for test_data
-explanation2 <- lime::explain(x = subset(test_data, select = -Outcome),
-                             explainer = explainer, labels = 'Diabetes', n_features = 7,
-                             n_permutations = 1000, feature_select = 'lasso_path')
+For case 339, the probability of "No Diabetes" is low which is 0.15, so LIME explains why the model leaned toward predicting Diabetes. The biggest negative impact comes from Glucose > 140, which strongly pushes toward diabetes. Other negative contributors include Pregnancies > 6, DiabetesPedigreeFunction > 0.626 and Insulin > 127. There is no supporting features therefore prediction probability for "No Diabetes" is very low. In short, this person have very high glucose and other risk factors made the model very likely to predict diabetes.
 
-# View explanation
-print(explanation2)
+For case 11, the probability of "No Diabetes" is high which is 0.86, the strongest positive influences pushing toward "No Diabetes" include, BMI <= 36.6, Glucose <= 117 and Age <= 41. There are some weak negative contributors (pushing toward diabetes), like Insulin > 120 and SkinThickness > 25. However, the positive signals dominate so the the model confidently predicts No Diabetes. This person, healthy glucose levels, younger age, and lower BMI greatly increased the likelihood of predicting "No Diabetes", even though minor risk factors exist.
 
-# Optional: visualize explanation
-plot_features(explanation2)
-```
-
-```{r}
-
-# Filter for only 'survived' patients
-diabetes <- df %>%
-  filter(Outcome == "Diabetes")
-
-# Randomly sample 10 survived patients
-set.seed(123)
-index <- sample(nrow(diabetes), 10)
-diabetes_samp <- diabetes[index, ]
-
-# Compute Gower distance matrix (excluding Outcome column)
-gower_dist <- daisy(diabetes_samp[, -which(names(diabetes_samp) == "Outcome")])
-
-# Convert to dataframe for plotting
-df_gower <- as.data.frame(as.matrix(gower_dist)) %>%
-  rownames_to_column('obs1') %>%
-  pivot_longer(cols = -obs1, names_to = "obs2", values_to = "gower") %>%
-  mutate(obs1 = as.numeric(obs1),
-         obs2 = as.numeric(obs2)) %>%
-  filter(obs1 < obs2)
-
-# Plot Gower distances
-ggplot(df_gower, aes(x = gower)) +
-  geom_dotplot() +
-  labs(title = "Gower Distances for Pairs of Diabetes Patients",
-       x = "Gower Distance",
-       y = "Count") +
-  theme_minimal()
-
-```
+### Gower Plot
 
 ```{r}
 nodiabetes <- df %>%
@@ -369,10 +387,6 @@ ggplot(df_gower, aes(x = gower)) +
   theme_minimal()
 ```
 
+This part calculates the Gower distance for pairs of patients who were classified as "No Diabetes" and visualizes the distances. The left cluster (0–100 Gower Distance) on the plot is showing most pairs have low Gower distances, meaning that many "No Diabetes" patients are quite similar to each other across all measured features. These similarities might be in features like glucose, age, BMI. It could indicate a consistent pattern in "No Diabetes" patients. The right Cluster (300–500 Gower Distance) is showing that some patient pairs have high Gower distances, suggesting they are much less similar. This indicate within "No Diabetes" patients, there is still heterogeneity, some people look very different based on their profile but still ended up being classified as "No Diabetes".
 
 
-
-<<<<<<< HEAD
-
-=======
->>>>>>> fa690e0a2a368b101ba088cd3afcaa399e913d92
