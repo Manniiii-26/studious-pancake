@@ -4,7 +4,8 @@ project:
 
 execute:
   echo: true
-  messages: false 
+  warning: false
+  message: false
 
 book:
   title: "Analysis of Diabetes with Machine Learning Methods"

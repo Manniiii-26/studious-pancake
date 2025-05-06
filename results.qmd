@@ -5,3 +5,93 @@
 
 ##Second result
 
+
+```{r}
+library(pdp)
+library(randomForest)
+library(ggplot2)
+library(purrr)
+library(tidyr)
+library(dplyr)
+```
+
+
+
+# Partial Dependence Plot
+
+```{r}
+# Convert Outcome to factor
+df$Outcome <- as.factor(df$Outcome)
+
+# Train Random Forest model
+set.seed(123)
+rf_model <- randomForest(Outcome ~ ., data = df)
+
+# Define variable names (independent variables)
+vars <- colnames(df)[colnames(df) != "Outcome"]
+
+# Create PDP for each variable, combine into tidy dataframe
+pdp_data <- map_dfr(vars, function(v) {
+  pd <- pdp::partial(rf_model, pred.var = v, prob = TRUE, grid.resolution = 20) %>%
+    as.data.frame() %>%
+    mutate(variable = v)
+  # rename value and yhat columns to be consistent
+  names(pd)[1:2] <- c("value", "yhat")
+  return(pd)
+})
+
+# Plot using ggplot2 and facet_wrap
+ggplot(pdp_data, aes(x = value, y = yhat)) +
+  geom_line(linewidth = 1) +
+  facet_wrap(~variable, scales = "free_x") +
+  labs(title = "Partial Dependence Plots for All Variables",
+       x = "Value", y = "Predicted Probability (yhat)") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 14, face = "bold"))
+```
+
+## Variable Importance 
+
+```{r}
+# Convert Outcome to factor
+df$Outcome <- as.factor(df$Outcome)
+
+# Train Random Forest (no formula interface, better for pdp and importance)
+set.seed(123)
+rf_model <- randomForest(x = df[, -which(names(df) == "Outcome")],
+                         y = df$Outcome,
+                         importance = TRUE)
+
+# Get importance
+imp <- importance(rf_model, type = 2)  # type=2 is Mean Decrease Gini (recommended)
+
+# Convert to dataframe
+imp_df <- data.frame(
+  variable = rownames(imp),
+  importance = imp[, 1]
+)
+
+# Scale importance to sum to 100
+imp_df <- imp_df %>%
+  mutate(importance_scaled = importance / sum(importance) * 100) %>%
+  arrange(importance_scaled)
+
+# Plot
+ggplot(imp_df, aes(x = importance_scaled, y = reorder(variable, importance_scaled))) +
+  geom_point(size = 3) +
+  labs(title = "Variable Importance (Scaled to Sum to 100)",
+       x = "Variable Importance Score",
+       y = "") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 14, face = "bold"))
+```
+
+
+
+
+
+
+
+
+
+
