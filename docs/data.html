@@ -158,7 +158,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./methods.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Methods</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Methods - Statistical Technique</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -213,7 +213,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="context-background-information" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="context-background-information"><span class="header-section-number">2.1</span> Context &amp; Background Information</h2>
-<p>This dataset is originally from the National Institute of Diabetes and Digestive and Kidney Diseases. Several constraints were placed on the selection of these instances from a larger database. In particular, all patients here are females at least 21 years old of Pima Indian heritage. The dataset has been collected with a sample size of 768 with 8 variables and a column of outcome. I got this dataset from Kaggle.</p>
+<p>This dataset originates from the National Institute of Diabetes and Digestive and Kidney Diseases. Several constraints were applied when selecting instances from a larger database. In particular, all patients are females at least 21 years old and of Pima Indian heritage. The dataset consists of 768 samples, with 8 variables and an outcome column. The dataset was obtained from Kaggle.</p>
 </section>
 <section id="content" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="content"><span class="header-section-number">2.2</span> Content</h2>
@@ -277,9 +277,9 @@ DiabetesPedigreeFunction                      Age                  Outcome
 </section>
 <section id="missing-value-analysis" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="missing-value-analysis"><span class="header-section-number">2.3</span> Missing value analysis</h2>
-<p>This dataset have missing values, they uses ‘0’ to fill in the dataset beforhand so I am not able to tell rather the ‘0’ means missing or the real response is actually zero. Expect for the ‘Outcome’ variable, ‘0’ indicate no diabeties.</p>
-<p>From the summary, variable ‘Pregnancies’ have 111 responses are ‘0’ which I will not mutate this column. Since this dataset is all females at least 21 years old, I do believe that some of the zeros for pregnanices does mean no pregnanices history.</p>
-<p>There is 5 missing values for ‘Glucose’, 35 missing values for ‘BloodPressure’, 277 missing values for ‘SkinThickness’, 374 missing values for ‘Insulin’, 11 missing values for ‘BMI’, and no missing values for ‘DiabetesPedigreeFunction’ and ‘Age’. I would replace zeros with the median of the non-zero values, median is robust to outliers and is commonly used in medical datasets.</p>
+<p>This dataset contains missing values, with ‘0’ used to fill them beforehand. As a result, it is difficult to determine whether a ‘0’ represents a missing value or an actual measurement of zero.</p>
+<p>From the summary, variable ‘Pregnancies’ have 111 responses are ‘0’ which I will not mutate this column. Since this dataset includes only females who are at least 21 years old, I believe that some of the zeros in the pregnancies variable likely indicate no pregnancy history.</p>
+<p>There is 5 missing values for ‘Glucose’, 35 missing values for ‘BloodPressure’, 277 missing values for ‘SkinThickness’, 374 missing values for ‘Insulin’, 11 missing values for ‘BMI’, and no missing values for ‘DiabetesPedigreeFunction’ and ‘Age’. I would replace zeros with the median of the non-zero values. The median is robust to outliers and is commonly used in medical datasets.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -302,7 +302,7 @@ DiabetesPedigreeFunction                      Age                  Outcome
                        0                        0                      500 </code></pre>
 </div>
 </div>
-<p>In my study, the variable I propose to categorize and make inferences about “Outcome”, indicates the potential diagnosis of diabetes. This variable determines whether a diabetes test result is positive (category value 1) or negative (category value 0). A remarkable aspect of our dataset is the “pregnancy” variable, with a minimum value of 0, a maximum value of 17, and a mean value of 3.845. It would be particularly informative to explore whether pregnancy is an important factor influencing the outcome of a diabetes diagnosis and to assess the degree to which it does so. In addition, common predictors such as body mass index (BMI) and age are expected to play an important role in determining outcomes.</p>
+<p>In my study, the variable I propose to categorize and make inferences about “Outcome”, indicates the potential diagnosis of diabetes. This variable determines whether a diabetes test result is positive (category value 1) or negative (category value 0). One notable aspect of our dataset is the “Pregnancies” variable, which has a minimum value of 0, a maximum value of 17, and a mean of 3.845. It would be particularly informative to explore whether pregnancy is an important factor influencing the outcome of a diabetes diagnosis and to assess the degree to which it does so. Additionally, common predictors such as body mass index (BMI) and age are also expected to play important roles in determining outcomes.</p>
 
 
 </section>
@@ -735,8 +735,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./methods.html" class="pagination-link" aria-label="Methods">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Methods</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./methods.html" class="pagination-link" aria-label="Methods - Statistical Technique">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Methods - Statistical Technique</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

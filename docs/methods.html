@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Methods – Analysis of Diabetes with Machine Learning Methods</title>
+<title>3&nbsp; Methods - Statistical Technique – Analysis of Diabetes with Machine Learning Methods</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,7 +81,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./methods.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Methods</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./methods.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Methods - Statistical Technique</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -124,7 +124,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./methods.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Methods</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Methods - Statistical Technique</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -149,13 +149,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#statistical-technique" id="toc-statistical-technique" class="nav-link active" data-scroll-target="#statistical-technique"><span class="header-section-number">3.1</span> Statistical Technique</a>
-  <ul class="collapse">
-  <li><a href="#tree-classification" id="toc-tree-classification" class="nav-link" data-scroll-target="#tree-classification"><span class="header-section-number">3.1.1</span> Tree Classification</a></li>
-  <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest"><span class="header-section-number">3.1.2</span> Random Forest</a></li>
-  <li><a href="#partial-dependence-plotpdp" id="toc-partial-dependence-plotpdp" class="nav-link" data-scroll-target="#partial-dependence-plotpdp"><span class="header-section-number">3.1.3</span> Partial Dependence Plot(PDP)</a></li>
-  <li><a href="#lime" id="toc-lime" class="nav-link" data-scroll-target="#lime"><span class="header-section-number">3.1.4</span> LIME</a></li>
-  </ul></li>
+  <li><a href="#tree-classification" id="toc-tree-classification" class="nav-link active" data-scroll-target="#tree-classification"><span class="header-section-number">3.1</span> Tree Classification</a></li>
+  <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest"><span class="header-section-number">3.2</span> Random Forest</a></li>
+  <li><a href="#partial-dependence-plotpdp" id="toc-partial-dependence-plotpdp" class="nav-link" data-scroll-target="#partial-dependence-plotpdp"><span class="header-section-number">3.3</span> Partial Dependence Plot(PDP)</a></li>
+  <li><a href="#lime" id="toc-lime" class="nav-link" data-scroll-target="#lime"><span class="header-section-number">3.4</span> LIME</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Manniiii-26/studious-pancake.git/edit/main/methods.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Manniiii-26/studious-pancake.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -164,7 +161,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Methods</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Methods - Statistical Technique</span></h1>
 </div>
 
 
@@ -181,34 +178,23 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="statistical-technique" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="statistical-technique"><span class="header-section-number">3.1</span> Statistical Technique</h2>
-<section id="tree-classification" class="level3" data-number="3.1.1">
-<h3 data-number="3.1.1" class="anchored" data-anchor-id="tree-classification"><span class="header-section-number">3.1.1</span> Tree Classification</h3>
-<ul>
-<li>The idea behind trees is to create multiple regions corresponding to different values (or intervals) of the predictors. Prediction is then conducted by assigning to a new observation the mean/median/mode (or maximum class probability) of the response computed over the region to which the new observation belongs to. Tree classification will also give us a meaningful visual representation of the variables.</li>
-</ul>
+<section id="tree-classification" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="tree-classification"><span class="header-section-number">3.1</span> Tree Classification</h2>
+<p>The idea behind trees is to create multiple regions corresponding to different values (or intervals) of the predictors. Prediction is then made by assigning a new observation the mean, median, mode, or maximum class probability of the response calculated for the region to which the observation belongs. Tree classification also provides a meaningful visual representation of the variables.</p>
 </section>
-<section id="random-forest" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="random-forest"><span class="header-section-number">3.1.2</span> Random Forest</h3>
-<ul>
-<li>Random Forest, registered as a trademark by Leo Breiman and Adele Cutler. The algorithm’s ease of use and flexibility have contributed to its adoption since it can handle both classification and regression problems. It can help in identifying which features or variables are most important in making predictions. This is particularly useful for understanding the underlying patterns in the data and it also helps reduce the variance and gain uncorrelated trees.</li>
-</ul>
+<section id="random-forest" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="random-forest"><span class="header-section-number">3.2</span> Random Forest</h2>
+<p>Random Forest, developed by Leo Breiman and Adele Cutler, is a trademarked algorithm. Its ease of use and flexibility have contributed to its widespread adoption, as it can handle both classification and regression problems. It helps identify which features or variables are most important for making predictions. This is particularly useful for understanding underlying patterns in the data, and it also helps reduce variance and produce uncorrelated trees.</p>
 </section>
-<section id="partial-dependence-plotpdp" class="level3" data-number="3.1.3">
-<h3 data-number="3.1.3" class="anchored" data-anchor-id="partial-dependence-plotpdp"><span class="header-section-number">3.1.3</span> Partial Dependence Plot(PDP)</h3>
-<ul>
-<li>Given the project goal, PDP open up the black box and show how each variable affects the probability of diabetes, while holding other variables constant. PDP can shows marginal effect of one or two features on the predicted outcome, the marginal effect is about the effect of a feature on the model while holding other features constant. Provide actionable insights which allow interpretation that can help with education, prevention, and targeted interventions about our project.</li>
-</ul>
+<section id="partial-dependence-plotpdp" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="partial-dependence-plotpdp"><span class="header-section-number">3.3</span> Partial Dependence Plot(PDP)</h2>
+<p>Given the project goal, PDP helps open up the black box and shows how each variable affects the probability of diabetes, while holding other variables constant. PDP can show the marginal effect of one or two features on the predicted outcome. This marginal effect reflects how much a specific feature impacts the model while all other features are held constant. PDP provides actionable insights that aid in interpretation, helping with education, prevention, and targeted interventions in our project.</p>
 </section>
-<section id="lime" class="level3" data-number="3.1.4">
-<h3 data-number="3.1.4" class="anchored" data-anchor-id="lime"><span class="header-section-number">3.1.4</span> LIME</h3>
-<ul>
-<li>Local Interpretable Model-agnostic Explanations, starts by choosing a specific sample, x’, which is our data point of interest. It then perturbs this sample by creating fake data points in the neighborhood of x’. These fake data points are fed into the black box model to obtain predictions. Each fake data point is weighted based on its distance or similarity to x’, giving more importance to those closer to the original sample. After this, LIME fits a simple and interpretable model to these weighted fake data points. This local model is tuned as necessary and helps us observe how the black box model’s predictions change in response to variations around x’. Ultimately, this process reveals which features were most important for that specific prediction.</li>
-</ul>
+<section id="lime" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="lime"><span class="header-section-number">3.4</span> LIME</h2>
+<p>Local Interpretable Model-agnostic Explanations (LIME) starts by choosing a specific sample, x’, which serves as the data point of interest. It then perturbs this sample by creating fake data points in the neighborhood of x’. These synthetic data points are fed into the black box model to generate predictions. Each point is weighted based on its distance or similarity to x’, giving more importance to those closer to the original sample. LIME then fits a simple and interpretable model to these weighted points. This local model helps us understand how the black box model’s predictions change in response to variations near x’. Ultimately, this process highlights which features are most important for that specific prediction.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

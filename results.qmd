@@ -313,6 +313,8 @@ The plot above summarizes which predictors have the greatest impact on the Rando
 ###  MeanDecreaseAccuracy vs MeanDecreaseGini
 
 ```{r}
+set.seed(5293)
+rf_model <- randomForest(Outcome ~ ., data = train_data, importance = TRUE)
 df2 <- data.frame(rf_model$importance)
 df2 |> 
   rownames_to_column('feature') |> 
