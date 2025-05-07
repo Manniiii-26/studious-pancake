@@ -9,11 +9,11 @@ The idea behind trees is to create multiple regions corresponding to different v
 Random Forest, developed by Leo Breiman and Adele Cutler, is a trademarked algorithm. Its ease of use and flexibility have contributed to its widespread adoption, as it can handle both classification and regression problems. It helps identify which features or variables are most important for making predictions. This is particularly useful for understanding underlying patterns in the data, and it also helps reduce variance and produce uncorrelated trees.
 
 
-## Partial Dependence Plot(PDP)
+## PDP - Partial Dependence Plot
 Given the project goal, PDP helps open up the black box and shows how each variable affects the probability of diabetes, while holding other variables constant. PDP can show the marginal effect of one or two features on the predicted outcome. This marginal effect reflects how much a specific feature impacts the model while all other features are held constant. PDP provides actionable insights that aid in interpretation, helping with education, prevention, and targeted interventions in our project.
 
 
-## LIME
+## LIME - Local Interpretable Model-Agnostic Explanations
 Local Interpretable Model-agnostic Explanations (LIME) starts by choosing a specific sample, x’, which serves as the data point of interest. It then perturbs this sample by creating fake data points in the neighborhood of x’. These synthetic data points are fed into the black box model to generate predictions. Each point is weighted based on its distance or similarity to x’, giving more importance to those closer to the original sample. LIME then fits a simple and interpretable model to these weighted points. This local model helps us understand how the black box model’s predictions change in response to variations near x’. Ultimately, this process highlights which features are most important for that specific prediction.
 
 
