@@ -143,8 +143,18 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#tree-classification" id="toc-tree-classification" class="nav-link active" data-scroll-target="#tree-classification"><span class="header-section-number">5.1</span> Tree Classification</a></li>
+  <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest"><span class="header-section-number">5.2</span> Random Forest</a></li>
+  <li><a href="#partial-dependence-plot" id="toc-partial-dependence-plot" class="nav-link" data-scroll-target="#partial-dependence-plot"><span class="header-section-number">5.3</span> Partial Dependence Plot</a></li>
+  <li><a href="#lime" id="toc-lime" class="nav-link" data-scroll-target="#lime"><span class="header-section-number">5.4</span> LIME</a></li>
+  <li><a href="#overall" id="toc-overall" class="nav-link" data-scroll-target="#overall"><span class="header-section-number">5.5</span> Overall</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/Manniiii-26/studious-pancake.git/edit/main/conclusion.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Manniiii-26/studious-pancake.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -168,8 +178,35 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="tree-classification" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="tree-classification"><span class="header-section-number">5.1</span> Tree Classification</h2>
+<p>The Decision Tree analysis offers valuable insights into the diagnostic factors affecting diabetes outcomes. Through simple and interpretable rules, it highlights Glucose as the dominant predictor while also acknowledging the role of other variables. This supports the project’s objective of clarifying significant factors and uncovering meaningful patterns, which ultimately can help in guiding interventions and educational efforts focused on diabetes prevention and monitoring.</p>
+<p>The model performs reasonably well overall, with good accuracy and specificity, meaning it is effective at identifying patients without diabetes. However, the sensitivity for diabetes cases is moderate, meaning some true diabetes cases were missed. In a healthcare context, where failing to detect diabetes can have serious consequences, it may be beneficial to optimize for higher sensitivity even if that lowers overall accuracy slightly. The confusion matrix shows that false positives and false negatives are both present, but false negatives (missed diabetes) are slightly more concerning.</p>
+</section>
+<section id="random-forest" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="random-forest"><span class="header-section-number">5.2</span> Random Forest</h2>
+<p>While Random Forest did not significantly outperform the pruned Decision Tree in terms of accuracy, it achieved slightly better specificity and balanced accuracy, indicating more stable and robust performance. Although sensitivity was modest, Random Forest still presents a valuable method in this analysis by providing a model less likely to overfit and better capable of handling more complex or noisy data. It matches with the project’s goals, Random Forest complements Decision Tree analysis by supporting reliable diabetes detection in addition to interpretable decision making.</p>
+</section>
+<section id="partial-dependence-plot" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="partial-dependence-plot"><span class="header-section-number">5.3</span> Partial Dependence Plot</h2>
+<p>Random Forest provided high predictive performance, but we needed PDP to understand which variables matter and how they influence predictions. PDP revealed that Glucose, followed by BMI and DiabetesPedigreeFunction, are the strongest contributors to higher diabetes risk predictions. This method goes particularly well along with my project goal because now, we are not only predicting diabetes but also able to clarify which factors have significant impacts, offering deeper insights into diabetes outcomes that can help inform prevention strategies.</p>
+<p>The variable importance method confirms the findings in PDP, the plot that variable importance provided have the same ranking aligns with the trends observed in the PDP plots, where Glucose and BMI showed more dramatic shifts in predicted probabilities. Together, these analyses confirm the central role of Glucose and BMI in predicting diabetes outcomes, reinforcing their importance in any decision making or medical guidance derived from the model.</p>
+</section>
+<section id="lime" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="lime"><span class="header-section-number">5.4</span> LIME</h2>
+<p>LIME offers individual-level explanations, showing which features contribute to each single prediction. This complements PDP, it shows the global patterns and LIME shows the local, individualized explanations. LIME is very helpful for decision support, for example when explaining to doctors or patients why a certain prediction was made.By breaking down complex predictions from models like Random Forest, LIME makes the decision making process clearer and easier.</p>
+</section>
+<section id="overall" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="overall"><span class="header-section-number">5.5</span> Overall</h2>
+<p>In this project, we explored and compared several machine learning approaches to predict diabetes and interpret the results in meaningful ways. Starting with a Decision Tree, we quickly learned that while easy to interpret, unpruned trees risk overfitting and losing generalizability. Pruning improved performance and stability, but still left some room for improvement in predictive power.</p>
+<p>Moving to Random Forest allowed us to achieve more robust and balanced predictions. Although the overall accuracy improvement over the pruned Decision Tree was modest, Random Forest offered clear advantages in terms of reducing overfitting and handling more complex patterns in the data. This aligns well with our project goal of building a model that not only predicts accurately, but also generalizes reliably.</p>
+<p>However, Random Forest’s complexity makes it less interpretable. To address this, we incorporated Partial Dependence Plots, which revealed which variables had the strongest overall influence on predictions. Glucose, BMI, and DiabetesPedigreeFunction stood out as the most impactful features. The PDPs helped bridge the gap between predictive performance and interpretability at the global, overall model level.</p>
+<p>We further confirmed these findings using Variable Importance plots, which supported the same variable rankings seen in the PDP analysis. This reinforced the understanding that Glucose and BMI are consistently crucial predictors across various perspectives.</p>
+<p>Finally, to address the need for local interpretability, we introduced LIME. Unlike PDP and Variable Importance, which show global trends, LIME allowed us to zoom in on individual predictions and understand exactly why a model predicted a particular outcome for a specific patient. This is especially useful for real world applications, case by case explanations before making decisions. LIME helps us to understand by turning complex model decisions into clear, straightforward explanations that make sense to nontechnical audiences</p>
+<p>Overall, with all those approach combining predictive power with multiple forms of interpretability, allows to make accurate diabetes prediction and meaningful insights. Each method contributes uniquely, Decision Trees offer simplicity, Random Forest ensures robustness, PDP and Variable Importance provide global understanding, and LIME delivers case-level clarity. Together, they form a comprehensive and practical framework for both prediction and explanation in diabetes detection and risk assessment.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -609,7 +646,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/Manniiii-26/studious-pancake.git/edit/main/conclusion.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Manniiii-26/studious-pancake.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Manniiii-26/studious-pancake.git/edit/main/conclusion.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Manniiii-26/studious-pancake.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

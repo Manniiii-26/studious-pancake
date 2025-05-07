@@ -1,1 +1,40 @@
 # Conclusion
+
+## Tree Classification
+
+The Decision Tree analysis offers valuable insights into the diagnostic factors affecting diabetes outcomes. Through simple and interpretable rules, it highlights Glucose as the dominant predictor while also acknowledging the role of other variables. This supports the project's objective of clarifying significant factors and uncovering meaningful patterns, which ultimately helps guide interventions and educational efforts focused on diabetes prevention and monitoring.
+
+The model performs reasonably well overall, with good accuracy and specificity, meaning it is effective at identifying patients without diabetes. However, the sensitivity for diabetes cases is moderate, meaning some true diabetes cases were missed. In a healthcare context, where failing to detect diabetes can have serious consequences, it may be beneficial to optimize for higher sensitivity even if that lowers overall accuracy slightly. The confusion matrix shows that false positives and false negatives are both present, but false negatives (missed diabetes) are slightly more concerning.
+
+
+## Random Forest
+
+While Random Forest did not significantly outperform the pruned Decision Tree in terms of accuracy, it achieved slightly better specificity and balanced accuracy, which indicates a more stable and robust performance. Random Forest still provides value in this analysis as it is less likely to overfit and better able to handle more complex or noisy data. It matches with the project's goals, Random Forest complements Decision Tree analysis by supporting reliable diabetes detection in addition to interpretable decision making.
+
+
+## Partial Dependence Plot
+
+Random Forest provided high predictive performance, but we needed PDP to understand which variables matter and how they influence predictions. PDP revealed that Glucose, followed by BMI and DiabetesPedigreeFunction, are the strongest contributors to higher diabetes risk predictions. This method goes particularly well along with my project goal because now, we are not only predicting diabetes but also able to clarify which factors have significant impacts, offering deeper insights into diabetes outcomes that can help inform prevention strategies.
+
+The variable importance method confirms the findings in PDP, the plot that variable importance provided have the same ranking aligns with the trends observed in the PDP plots, where Glucose and BMI showed more dramatic shifts in predicted probabilities. Together, these analyses confirm the central role of Glucose and BMI in predicting diabetes outcomes, reinforcing their importance in any decision making or medical guidance derived from the model.
+
+
+## LIME
+
+LIME offers individual-level explanations, showing which features contribute to each prediction individually. This complements PDP, it shows the global patterns and LIME shows the local, individualized explanations. LIME is helpful for decision support, especially when explaining to doctors or patients why a particular prediction was made. By breaking down complex predictions from models like Random Forest, LIME makes the decision making process clearer and easier.
+
+
+## Overall
+
+In this project, we explored and compared several machine learning approaches to predict diabetes and interpret the results in meaningful ways. Starting with a Decision Tree, we quickly learned that while easy to interpret, unpruned trees risk overfitting and losing generalizability. Pruning improved performance and stability, but still left some room for improvement in predictive power.
+
+Moving to Random Forest allowed us to achieve more robust and balanced predictions. Although the overall accuracy improvement over the pruned Decision Tree was modest, Random Forest offered clear advantages in terms of reducing overfitting and handling more complex patterns in the data. This aligns well with our project goal of building a model that not only predicts accurately, but also generalizes reliably.
+
+However, Random Forest’s complexity makes it less interpretable. To address this, we incorporated Partial Dependence Plots, which revealed which revealed the variables with the strongest overall influence on predictions. Glucose, BMI, and DiabetesPedigreeFunction stood out as the most impactful features. The PDPs helped bridge the gap between predictive performance and interpretability at the global, overall model level.
+
+We further confirmed these findings using Variable Importance plots, which supported the same variable rankings seen in the PDP analysis. This reinforced the understanding that Glucose and BMI are consistently crucial predictors across various perspectives.
+
+Finally, to address the need for local interpretability, we introduced LIME. Unlike PDP and Variable Importance, which show global trends, LIME allowed us to zoom in on individual predictions and understand exactly why a model predicted a particular outcome for a specific patient. This is especially useful for real world applications, case by case explanations before making decisions. LIME helps us to understand by turning complex model decisions into clear, straightforward explanations that make sense to nontechnical audiences
+
+Overall, with all these approaches combining predictive power with multiple forms of interpretability, allows to make accurate diabetes prediction and meaningful insights. Each method contributes uniquely, Decision Trees offer simplicity, Random Forest ensures robustness, PDP and Variable Importance offer global understanding, and LIME provides case-level clarity. Together, they form a comprehensive and practical framework for both prediction and explanation in diabetes detection and risk assessment.
+

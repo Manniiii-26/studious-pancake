@@ -19,7 +19,7 @@ library(cluster)
 
 ## Prepare the data
 
-- The data is imported and cleaned. The outcome variable is recoded from numeric (0/1) into descriptive labels ("No Diabetes" and "Diabetes"), improving clarity in the analysis and visualization. All missing values replaced with median.
+The data is imported and cleaned. The outcome variable is recoded from numeric (0/1) into descriptive labels ("No Diabetes" and "Diabetes"), improving clarity in the analysis and visualization. All missing values replaced with median.
 
 ```{r}
 # Prepare the data
@@ -40,26 +40,23 @@ for (col in missing_cols) {
 ```
 ## Decision Tree Classification Model
 
-- This code below implements a Decision Tree classification model to predict diabetes outcomes using patients' diagnostic data. The dataset used consists of multiple diagnostic measurements and an outcome variable, which indicates whether a patient has diabetes ("Diabetes") or not ("No Diabetes"). The task below divided the dataset into training (70%) and testing (30%) sets to allow model training and performance evaluation. A decision tree is built where the outcome variable is predicted based on all available predictors from this dataset.
+The code below implements a Decision Tree classification model to predict diabetes outcomes using patients’ diagnostic data. The dataset consists of multiple diagnostic measurements and an outcome variable, which indicates whether a patient has diabetes or not. The dataset is split into training (70%) and testing (30%) sets to allow for model training and performance evaluation. A decision tree is then built to predict the outcome based on all available predictors from this dataset.
 
 ```{r}
 set.seed(5293)
-# Split the data into training and testing sets (70% train, 30% test)
 train_index <- createDataPartition(df$Outcome, p = 0.7, list = FALSE)
 
 train_data <- df[train_index, ]
 test_data <- df[-train_index, ]
 
-# Train Decision Tree model
 tree_model <- rpart(Outcome ~ ., data = train_data, method = "class")
-
-# Plot the tree
 rpart.plot(tree_model, type = 2, fallen.leaves = TRUE, box.palette = 'BuOr')
-#, extra = 3 - Display the misclassification rate
 
 ```
 
-The decision tree graph result illustrates the process through which the model makes predictions about diabetes outcomes. Each internal node represents a decision rule based on one of the predictors. The tree splits first on Glucose with a value of 144. This indicates that Glucose levels play the most significant role in predicting diabetes. Patients with Glucose below this threshold are more likely to be "No Diabetes," while those above are more likely to be "Diabetes". Variables BMI, DiabetesPedigreeFunction and Age are other important factors. Subsequent splits on these variables suggest that they also meaningfully contribute to the model's decision process. For example, among patients with lower Glucose levels, those with lower BMI and lower DiabetesPedigreeFunction are classified as "No Diabetes" more often. One of the advantage of the tree is that its structure reflects interactions between variables. For example, even when Glucose is high, lower DiabetesPedigreeFunction and younger Age may reduce the probability of being classified as "Diabetes". The '0.65' in the first node indicates the proportion of sample in this node that belong to the predicted class which in here, it is 'No Diabetes'. In other words, 0.35 of the sample in this node are 'Diabetes'. The higher this number, the more confident the prediction. The '100%' in the first node is the percentage of total samples in the entire dataset that fall into this node, it begins with the whole dataset or the training dataset and it starts with 100%.
+The decision tree graph illustrates the process by which the model makes predictions about diabetes outcomes. Each internal node represents a decision rule based on one of the predictors. The tree splits first on Glucose with a value of 144, indicating that glucose levels play the most significant role in predicting diabetes. Patients with glucose levels below this threshold are more likely to be classified as "No Diabetes", while those above are more likely to be classified as "Diabetes". Further splits occur on other important variables, such as BMI, DiabetesPedigreeFunction, and Age, which also contribute meaningfully to the decision-making process. For example, patients with lower glucose levels, lower BMI, and lower DiabetesPedigreeFunction values are more often classified as "No Diabetes". One of the key advantages of the decision tree is that it reflects interactions between variables. Even when glucose levels are high, lower DiabetesPedigreeFunction values or younger age may reduce the probability of being classified as "Diabetes". Finally, the '0.65' in the first node indicates the proportion of samples classified as "No Diabetes" at that point in the tree. The tree starts at the top with 100% of the dataset, which gradually splits based on predictor values, showing the pathway that leads to each prediction.
+
+
 
 ### Make predictions on the test set - display result with confusion matrix
 ```{r}
@@ -71,9 +68,10 @@ print(confusion)
 cat("Accuracy:", confusion$overall["Accuracy"], "\n")
 ```
 
-From the confusion matrix, we may see that there are 54 cases of true positive, which mean the patient have diabetes and we correctly predicted they do have diabetes. There are 125 cases of true negatives, 25 cases of false positives and 26 cases of false negatives. We may also refer to the accuracy rate, it tells us how much the model correctly predicted the outcome, that is, about 78% of the time it makes correct prediction. The sensitivity measures the model's ability to correctly identify patients who actually have diabetes. In this case, we prefer a higher sensitivity because it is more important to detect as many diabetes cases as possible and missing a diabetes diagnosis could be serious. The specificity measures how well the model identifies patients who do not have diabetes. Around 83% of 'No Diabetes' cases are correctly identifies, this model is relatively good to avoiding false alarms, and people would not want unnecessary treatment.
+From the confusion matrix, we can see that there are 54 cases of true positives, meaning that the patients had diabetes and were correctly predicted as having diabetes. There are also 125 true negatives, along with 25 false positives and 26 false negatives. The accuracy rate shows us how often the model makes correct predictions — in this case, about 78% of the time. Sensitivity reflects the model’s ability to correctly identify patients who actually have diabetes. Since missing a diabetes diagnosis could have serious consequences, higher sensitivity is generally preferred in this context. Specificity, on the other hand, measures the model’s ability to correctly identify patients without diabetes. Here, around 83% of 'No Diabetes' cases are correctly identified, which suggests the model is also effective at avoiding false alarms — an important consideration, as people without diabetes should not receive unnecessary treatment.
 
-Although this unpruned decision tree captures a large number of splits and thus perfectly fits the training data, it introduces issues related to overfitting(too complex), reduced interpretability, and poorer generalization to new patients. An unpruned tree sensitive to every small changes in the training data and that could lead to large changes in the tree structure. By pruning the tree to remove unnecessary splits, the model can focus on the most important predictors, maintain a simpler and clearer structure, and perform more reliably when applied to unseen data. This is especially important in a healthcare context, where models need to be both accurate and interpretable to support decision-making.
+Although this unpruned decision tree captures many splits and fits the training data well, it introduces several challenges. These include overfitting (due to excessive complexity), reduced interpretability, and poorer generalization to new patients. Because an unpruned tree is highly sensitive to minor variations in the data, its structure may change drastically with small changes in input, potentially reducing its reliability. To address this, pruning helps remove unnecessary splits, allowing the model to focus on the most important predictors. This leads to a simpler and clearer structure, which performs better on unseen data. This is particularly important in a healthcare context, where models should be both accurate and interpretable to support decision-making effectively.
+
 
 ### Pruning and Improving Decision Tree Model - Plot cross validation error
 ```{r}
@@ -144,7 +142,7 @@ ggplot() +
   theme_minimal()
 ```
 
-This decision boundary plot contains variabls 'Glucose' and 'BMI', give us intuitive visualization of the model’s decision process. This plot shows exactly how the decision tree splits the data using simple rules. It makes the model interpretable, clear vertical separation shows 'Glucose' is the primary decision factor, and 'BMI' is limited horizontal influence shows it plays a secondary role. This helps explain and justify which variables are most useful in prediction. From this plot, we can easily spot where the model makes mistakes and roughly how accurate our model performs. 
+This decision boundary plot contains variabls 'Glucose' and 'BMI', give us intuitive visualization of the model’s decision process. This plot shows exactly how the decision tree splits the data using simple rules. It makes the model interpretable, clear vertical separation shows 'Glucose’ is the primary decision factor, while the limited horizontal influence of ‘BMI’ indicates it plays a secondary role. This helps explain and justify which variables are most useful in prediction. From this plot, we can easily spot where the model makes mistakes and roughly how accurate our model performs. 
 
 ### Another Plot in 2D - Easier to Spot the Misclassification Points
 
@@ -222,7 +220,7 @@ cat("Random Forest Accuracy:", confusion_rf$overall["Accuracy"], "\n")
 ```
 As we can see above, the accuracy rate is 0.77, sensitivity is 0.64, and specificity is 0.84. The overall performance is similar to decision tree. The sensitivity rate which is diabetes patients are correctly identified and a bit lower than tree while specificity is slightly better.
 
-The improvement I expect from random forest is not strong here. By considering possible reasons like size of the dataset, or the variables itself provide clear decision boundarie, I think tree might have just handled as good as random forest. Although result not surperingly good, random forest itself is more stable
+The improvement I expect from random forest is not strong here. By considering possible reasons like size of the dataset, or the variables itself provide clear decision boundaries, I think tree might have just handled as good as random forest. Although the result is not surprisingly good, random forest itself is more stable
 
 ## Compare Decision Tree and Random Forest
 
@@ -242,12 +240,12 @@ legend("bottomright", legend = c(
   paste0("Random Forest AUC = ", round(auc(roc_rf), 3))
 ), col = c("blue", "red"), lwd = 2)
 ```
-The ROC curve comparison highlights the trade-off between interpretability and performance. While the pruned decision tree offers a simpler model which have 0.753 AUC values, the Random Forest significantly outperforms it in prediction accuracy and its AUC values is 0.838). In this project, where accurate prediction of diabetes is critical, the Random Forest is better than pruned tree. However, the pruned tree remains valuable for explaining decision rules and successfully finds out the  key risk factors.
+The ROC curve comparison highlights the trade-off between interpretability and performance. While the pruned decision tree offers a simpler model which has an AUC value of 0.753, the Random Forest significantly outperforms it in prediction accuracy and its AUC values is 0.838). In this project, where accurate prediction of diabetes is critical, the Random Forest is better than pruned tree. However, the pruned tree remains valuable for explaining decision rules and successfully finds out the  key risk factors.
 
 
 ## Partial Dependence Plot
 
-While Random Forest offers strong predictive power, PDP often described as a "black-box" model. This means we know it makes good predictions, but we do not know which variables are driving these predictions or how they are impacting the predicted outcome. Although metrics like accuracy, sensitivity, specificity, and ROC/AUC show overall model performance, they do not tell us what the model has learned about individual variables. This method matches perfectly with my project's goal, to find out the key facters that lead to diabetes.
+While Random Forest offers strong predictive power, PDP often described as a "black-box" model. This means we know it makes good predictions, but we do not know which variables are driving these predictions or how they are impacting the predicted outcome. Although metrics like accuracy, sensitivity, specificity, and ROC/AUC show overall model performance, they do not tell us what the model has learned about individual variables. This method matches perfectly with my project's goal, to find out the key factors that lead to diabetes.
 
 ```{r}
 # Train Random Forest model
@@ -274,7 +272,8 @@ ggplot(pdp_data, aes(x = value, y = yhat)) +
 ```
 Each panel in the plot shows how the predicted probability of diabetes (yhat) changes when the value of a single predictor variable increases.
 
-And here is my main findings:
+my main finding is:
+
 - Glucose and BMI are clearly the most critical features, they are sharp and consistent increases in prediction probability which mean they are very important for diabetes prediction.
 
 - Age, DiabetesPedigreeFunction, and Pregnancies, contribute but have moderate to mild effects.
@@ -309,12 +308,12 @@ ggplot(imp_df, aes(x = importance_scaled, y = reorder(variable, importance_scale
 
 ```
 
-The plot above summarizes which predictors have the greatest impact on the Random Forest model’s performance. The results show that Glucose is by far the most influential variable, followed by BMI, Age, and DiabetesPedigreeFunction. These variables likely play key roles in determining whether a patient has diabetes. Bottom down the list, variables like Pregnancies, SkinThickness, and BloodPressure have relatively lower importance, suggesting they are less sigificant in making predictions in this dataset.
+The plot above summarizes which predictors have the greatest impact on the Random Forest model’s performance. The results show that Glucose is by far the most influential variable, followed by BMI, Age, and DiabetesPedigreeFunction. These variables likely play key roles in determining whether a patient has diabetes. Towards the bottom of the list, variables like Pregnancies, SkinThickness, and BloodPressure have relatively lower importance, suggesting they are less sigificant in making predictions in this dataset.
 
 ###  MeanDecreaseAccuracy vs MeanDecreaseGini
 
 ```{r}
-df2 <- data.frame(mod_rf$importance)
+df2 <- data.frame(rf_model$importance)
 df2 |> 
   rownames_to_column('feature') |> 
   pivot_longer(cols = starts_with('Mean')) |> 
@@ -324,12 +323,12 @@ df2 |>
   theme(legend.position = 'top')
 ```
 
-This plot shows two measures of variable importance calculated from the Random Forest model MeanDecreaseAccuracy which is the red dots, this measures how much the accuracy of the model decreases when the values of a variable are permuted. Higher values mean the variable is more important. The MeanDecreaseGini is the blue dots, this measures how much each variable contributes to decreasing the Gini impurity in the forest's nodes. In simpler terms, it reflects how often and how well this variable was used to split data in decision trees.
+This plot shows two measures of variable importance calculated from the Random Forest model MeanDecreaseAccuracy which is the red dots, this measures how much the accuracy of the model decreases when the values of a variable are permuted. Higher values mean the variable is more important. The MeanDecreaseGini is the blue dots, this measures how much each variable contributes to decreasing the Gini impurity in the forest's nodes. In simpler terms, it shows how often and effectively each variable was used to split data in decision trees.
 
 
 ## LIME - Local Interpretable Model-Agnostic Explanations
 
-Partial Dependence Plots provided valuable insights into the global importance and average effect of each feature on diabetes prediction, they do not explain how individual predictions are made. To better understand local behavior for specific cases, I use LIME to helps us reveal the exact features driving each prediction on a case by case basis.
+Partial Dependence Plots provided valuable insights into the global importance and average effect of each feature on diabetes prediction, they do not explain how individual predictions are made. To better understand local behavior for specific cases, I use LIME to help us reveal the exact features driving each prediction on a case by case basis.
 
 ```{r}
 set.seed(5293)
@@ -353,9 +352,9 @@ plot_features(explanation)
 ```
 The graph shows explanations for two individual predictions, the Case 339 and Case 11, where the model predicted "No Diabetes". The bars indicate how much each feature contributed to the prediction. Red bars is Contradicts meaning features pushing the prediction away from "No Diabetes" and toward Diabetes. Blue bars is Supports, features pushing the prediction toward "No Diabetes".
 
-For case 339, the probability of "No Diabetes" is low which is 0.15, so LIME explains why the model leaned toward predicting Diabetes. The biggest negative impact comes from Glucose > 140, which strongly pushes toward diabetes. Other negative contributors include Pregnancies > 6, DiabetesPedigreeFunction > 0.626 and Insulin > 127. There is no supporting features therefore prediction probability for "No Diabetes" is very low. In short, this person have very high glucose and other risk factors made the model very likely to predict diabetes.
+For case 339, the probability of "No Diabetes" is low which is 0.15, so LIME explains why the model leaned toward predicting Diabetes. The biggest negative impact comes from Glucose > 140, which strongly pushes toward diabetes. Other negative contributors include Pregnancies > 6, DiabetesPedigreeFunction > 0.626 and Insulin > 127. There is no supporting features therefore prediction probability for "No Diabetes" is very low. In short, this person has very high glucose and other risk factors made the model very likely to predict diabetes.
 
-For case 11, the probability of "No Diabetes" is high which is 0.86, the strongest positive influences pushing toward "No Diabetes" include, BMI <= 36.6, Glucose <= 117 and Age <= 41. There are some weak negative contributors (pushing toward diabetes), like Insulin > 120 and SkinThickness > 25. However, the positive signals dominate so the the model confidently predicts No Diabetes. This person, healthy glucose levels, younger age, and lower BMI greatly increased the likelihood of predicting "No Diabetes", even though minor risk factors exist.
+For case 11, the probability of "No Diabetes" is high which is 0.86, the strongest positive influences pushing toward "No Diabetes" include, BMI <= 36.6, Glucose <= 117 and Age <= 41. There are some weak negative contributors (pushing toward diabetes), like Insulin > 120 and SkinThickness > 25. However, the positive signals dominate so the the model confidently predicts No Diabetes. This person, healthy glucose levels, younger age, and lower BMI greatly increased the likelihood that this person would be classified as 'No Diabetes', even though minor risk factors exist.
 
 ### Gower Plot
 
@@ -387,6 +386,6 @@ ggplot(df_gower, aes(x = gower)) +
   theme_minimal()
 ```
 
-This part calculates the Gower distance for pairs of patients who were classified as "No Diabetes" and visualizes the distances. The left cluster (0–100 Gower Distance) on the plot is showing most pairs have low Gower distances, meaning that many "No Diabetes" patients are quite similar to each other across all measured features. These similarities might be in features like glucose, age, BMI. It could indicate a consistent pattern in "No Diabetes" patients. The right Cluster (300–500 Gower Distance) is showing that some patient pairs have high Gower distances, suggesting they are much less similar. This indicate within "No Diabetes" patients, there is still heterogeneity, some people look very different based on their profile but still ended up being classified as "No Diabetes".
+This part calculates the Gower distance for pairs of patients who were classified as "No Diabetes" and visualizes the distances. The left cluster (0–100 Gower Distance) on the plot is showing most pairs have low Gower distances, meaning that many "No Diabetes" patients are quite similar to each other across all measured features. These similarities might be in features like glucose, age, BMI. It could indicate a consistent pattern in "No Diabetes" patients. The right Cluster (300–500 Gower Distance) is showing that some patient pairs have high Gower distances, suggesting they are much less similar. This indicates that within 'No Diabetes' patients, there is still heterogeneity, some people look very different based on their profile, yet still end up being classified as "No Diabetes".
 
 

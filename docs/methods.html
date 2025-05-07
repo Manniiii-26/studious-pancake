@@ -153,7 +153,8 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#tree-classification" id="toc-tree-classification" class="nav-link" data-scroll-target="#tree-classification"><span class="header-section-number">3.1.1</span> Tree Classification</a></li>
   <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest"><span class="header-section-number">3.1.2</span> Random Forest</a></li>
-  <li><a href="#lime" id="toc-lime" class="nav-link" data-scroll-target="#lime"><span class="header-section-number">3.1.3</span> LIME</a></li>
+  <li><a href="#partial-dependence-plotpdp" id="toc-partial-dependence-plotpdp" class="nav-link" data-scroll-target="#partial-dependence-plotpdp"><span class="header-section-number">3.1.3</span> Partial Dependence Plot(PDP)</a></li>
+  <li><a href="#lime" id="toc-lime" class="nav-link" data-scroll-target="#lime"><span class="header-section-number">3.1.4</span> LIME</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Manniiii-26/studious-pancake.git/edit/main/methods.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Manniiii-26/studious-pancake.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -194,8 +195,14 @@ ul.task-list li input[type="checkbox"] {
 <li>Random Forest, registered as a trademark by Leo Breiman and Adele Cutler. The algorithm’s ease of use and flexibility have contributed to its adoption since it can handle both classification and regression problems. It can help in identifying which features or variables are most important in making predictions. This is particularly useful for understanding the underlying patterns in the data and it also helps reduce the variance and gain uncorrelated trees.</li>
 </ul>
 </section>
-<section id="lime" class="level3" data-number="3.1.3">
-<h3 data-number="3.1.3" class="anchored" data-anchor-id="lime"><span class="header-section-number">3.1.3</span> LIME</h3>
+<section id="partial-dependence-plotpdp" class="level3" data-number="3.1.3">
+<h3 data-number="3.1.3" class="anchored" data-anchor-id="partial-dependence-plotpdp"><span class="header-section-number">3.1.3</span> Partial Dependence Plot(PDP)</h3>
+<ul>
+<li>Given the project goal, PDP open up the black box and show how each variable affects the probability of diabetes, while holding other variables constant. PDP can shows marginal effect of one or two features on the predicted outcome, the marginal effect is about the effect of a feature on the model while holding other features constant. Provide actionable insights which allow interpretation that can help with education, prevention, and targeted interventions about our project.</li>
+</ul>
+</section>
+<section id="lime" class="level3" data-number="3.1.4">
+<h3 data-number="3.1.4" class="anchored" data-anchor-id="lime"><span class="header-section-number">3.1.4</span> LIME</h3>
 <ul>
 <li>Local Interpretable Model-agnostic Explanations, starts by choosing a specific sample, x’, which is our data point of interest. It then perturbs this sample by creating fake data points in the neighborhood of x’. These fake data points are fed into the black box model to obtain predictions. Each fake data point is weighted based on its distance or similarity to x’, giving more importance to those closer to the original sample. After this, LIME fits a simple and interpretable model to these weighted fake data points. This local model is tuned as necessary and helps us observe how the black box model’s predictions change in response to variations around x’. Ultimately, this process reveals which features were most important for that specific prediction.</li>
 </ul>

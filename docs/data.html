@@ -234,10 +234,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/diabetes.csv"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/diabetes.csv"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Pregnancies        Glucose      BloodPressure    SkinThickness  
@@ -264,7 +262,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View summary of zeros</span></span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of 0</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(df, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">==</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -285,17 +283,15 @@ DiabetesPedigreeFunction                      Age                  Outcome
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Columns where 0 is considered missing (except 'Pregnancies' and 'Outcome')</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>missing_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Glucose"</span>, <span class="st">"BloodPressure"</span>, <span class="st">"SkinThickness"</span>, <span class="st">"Insulin"</span>, <span class="st">"BMI"</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace 0 with median of non-zero values in the specified columns</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> missing_cols) {</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  median_value <span class="ot">&lt;-</span> <span class="fu">median</span>(df[[col]][df[[col]] <span class="sc">!=</span> <span class="dv">0</span>], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  df[[col]][df[[col]] <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> median_value</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Check result</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(df, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">==</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>missing_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Glucose"</span>, <span class="st">"BloodPressure"</span>, <span class="st">"SkinThickness"</span>, <span class="st">"Insulin"</span>, <span class="st">"BMI"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace 0 with median</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> missing_cols) {</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  median_value <span class="ot">&lt;-</span> <span class="fu">median</span>(df[[col]][df[[col]] <span class="sc">!=</span> <span class="dv">0</span>], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  df[[col]][df[[col]] <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> median_value</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(df, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">==</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>             Pregnancies                  Glucose            BloodPressure 
@@ -306,34 +302,7 @@ DiabetesPedigreeFunction                      Age                  Outcome
                        0                        0                      500 </code></pre>
 </div>
 </div>
-<p>In my study, the variable I propose to categorize and make inferences about “outcome”, indicates the potential diagnosis of diabetes. This variable determines whether a diabetes test result is positive (category value 1) or negative (category value 0). A remarkable aspect of our dataset is the “pregnancy” variable, with a minimum value of 0, a maximum value of 17, and a mean value of 3.845. It would be particularly informative to explore whether pregnancy is an important factor influencing the outcome of a diabetes diagnosis and to assess the degree to which it does so. In addition, common predictors such as body mass index (BMI) and age are expected to play an important role in determining outcomes.</p>
-<p>From the summary, variable ‘Pregnancies’ have 111 responses are ‘0’ which I will not mutate this column. Since this dataset is all females at least 21 years old, I do believe that some of the zeros for pregnanices does mean no pregnanices history.</p>
-<p>There is 5 missing values for ‘Glucose’, 35 missing values for ‘BloodPressure’, 277 missing values for ‘SkinThickness’, 374 missing values for ‘Insulin’, 11 missing values for ‘BMI’, and no missing values for ‘DiabetesPedigreeFunction’ and ‘Age’. I would replace zeros with the median of the non-zero values, median is robust to outliers and is commonly used in medical datasets.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Columns where 0 is considered missing (except 'Pregnancies' and 'Outcome')</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>missing_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Glucose"</span>, <span class="st">"BloodPressure"</span>, <span class="st">"SkinThickness"</span>, <span class="st">"Insulin"</span>, <span class="st">"BMI"</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace 0 with median of non-zero values in the specified columns</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> missing_cols) {</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  median_value <span class="ot">&lt;-</span> <span class="fu">median</span>(df[[col]][df[[col]] <span class="sc">!=</span> <span class="dv">0</span>], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  df[[col]][df[[col]] <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> median_value</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Check result</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(df, <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">==</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>             Pregnancies                  Glucose            BloodPressure 
-                     111                        0                        0 
-           SkinThickness                  Insulin                      BMI 
-                       0                        0                        0 
-DiabetesPedigreeFunction                      Age                  Outcome 
-                       0                        0                      500 </code></pre>
-</div>
-</div>
-<p>In my study, the variable I propose to categorize and make inferences about “outcome”, indicates the potential diagnosis of diabetes. This variable determines whether a diabetes test result is positive (category value 1) or negative (category value 0). A remarkable aspect of our dataset is the “pregnancy” variable, with a minimum value of 0, a maximum value of 17, and a mean value of 3.845. It would be particularly informative to explore whether pregnancy is an important factor influencing the outcome of a diabetes diagnosis and to assess the degree to which it does so. In addition, common predictors such as body mass index (BMI) and age are expected to play an important role in determining outcomes.</p>
+<p>In my study, the variable I propose to categorize and make inferences about “Outcome”, indicates the potential diagnosis of diabetes. This variable determines whether a diabetes test result is positive (category value 1) or negative (category value 0). A remarkable aspect of our dataset is the “pregnancy” variable, with a minimum value of 0, a maximum value of 17, and a mean value of 3.845. It would be particularly informative to explore whether pregnancy is an important factor influencing the outcome of a diabetes diagnosis and to assess the degree to which it does so. In addition, common predictors such as body mass index (BMI) and age are expected to play an important role in determining outcomes.</p>
 
 
 </section>
