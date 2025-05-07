@@ -80,21 +80,21 @@
     ]
   },
   {
-    "objectID": "methods.html#partial-dependence-plotpdp",
-    "href": "methods.html#partial-dependence-plotpdp",
+    "objectID": "methods.html#pdp---partial-dependence-plot",
+    "href": "methods.html#pdp---partial-dependence-plot",
     "title": "3  Methods - Statistical Technique",
-    "section": "3.3 Partial Dependence Plot(PDP)",
-    "text": "3.3 Partial Dependence Plot(PDP)\nGiven the project goal, PDP helps open up the black box and shows how each variable affects the probability of diabetes, while holding other variables constant. PDP can show the marginal effect of one or two features on the predicted outcome. This marginal effect reflects how much a specific feature impacts the model while all other features are held constant. PDP provides actionable insights that aid in interpretation, helping with education, prevention, and targeted interventions in our project.",
+    "section": "3.3 PDP - Partial Dependence Plot",
+    "text": "3.3 PDP - Partial Dependence Plot\nGiven the project goal, PDP helps open up the black box and shows how each variable affects the probability of diabetes, while holding other variables constant. PDP can show the marginal effect of one or two features on the predicted outcome. This marginal effect reflects how much a specific feature impacts the model while all other features are held constant. PDP provides actionable insights that aid in interpretation, helping with education, prevention, and targeted interventions in our project.",
     "crumbs": [
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>Methods - Statistical Technique</span>"
     ]
   },
   {
-    "objectID": "methods.html#lime",
-    "href": "methods.html#lime",
+    "objectID": "methods.html#lime---local-interpretable-model-agnostic-explanations",
+    "href": "methods.html#lime---local-interpretable-model-agnostic-explanations",
     "title": "3  Methods - Statistical Technique",
-    "section": "3.4 LIME",
-    "text": "3.4 LIME\nLocal Interpretable Model-agnostic Explanations (LIME) starts by choosing a specific sample, x’, which serves as the data point of interest. It then perturbs this sample by creating fake data points in the neighborhood of x’. These synthetic data points are fed into the black box model to generate predictions. Each point is weighted based on its distance or similarity to x’, giving more importance to those closer to the original sample. LIME then fits a simple and interpretable model to these weighted points. This local model helps us understand how the black box model’s predictions change in response to variations near x’. Ultimately, this process highlights which features are most important for that specific prediction.",
+    "section": "3.4 LIME - Local Interpretable Model-Agnostic Explanations",
+    "text": "3.4 LIME - Local Interpretable Model-Agnostic Explanations\nLocal Interpretable Model-agnostic Explanations (LIME) starts by choosing a specific sample, x’, which serves as the data point of interest. It then perturbs this sample by creating fake data points in the neighborhood of x’. These synthetic data points are fed into the black box model to generate predictions. Each point is weighted based on its distance or similarity to x’, giving more importance to those closer to the original sample. LIME then fits a simple and interpretable model to these weighted points. This local model helps us understand how the black box model’s predictions change in response to variations near x’. Ultimately, this process highlights which features are most important for that specific prediction.",
     "crumbs": [
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>Methods - Statistical Technique</span>"
     ]

@@ -151,8 +151,8 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#tree-classification" id="toc-tree-classification" class="nav-link active" data-scroll-target="#tree-classification"><span class="header-section-number">3.1</span> Tree Classification</a></li>
   <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest"><span class="header-section-number">3.2</span> Random Forest</a></li>
-  <li><a href="#partial-dependence-plotpdp" id="toc-partial-dependence-plotpdp" class="nav-link" data-scroll-target="#partial-dependence-plotpdp"><span class="header-section-number">3.3</span> Partial Dependence Plot(PDP)</a></li>
-  <li><a href="#lime" id="toc-lime" class="nav-link" data-scroll-target="#lime"><span class="header-section-number">3.4</span> LIME</a></li>
+  <li><a href="#pdp---partial-dependence-plot" id="toc-pdp---partial-dependence-plot" class="nav-link" data-scroll-target="#pdp---partial-dependence-plot"><span class="header-section-number">3.3</span> PDP - Partial Dependence Plot</a></li>
+  <li><a href="#lime---local-interpretable-model-agnostic-explanations" id="toc-lime---local-interpretable-model-agnostic-explanations" class="nav-link" data-scroll-target="#lime---local-interpretable-model-agnostic-explanations"><span class="header-section-number">3.4</span> LIME - Local Interpretable Model-Agnostic Explanations</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Manniiii-26/studious-pancake.git/edit/main/methods.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Manniiii-26/studious-pancake.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -186,12 +186,12 @@ ul.task-list li input[type="checkbox"] {
 <h2 data-number="3.2" class="anchored" data-anchor-id="random-forest"><span class="header-section-number">3.2</span> Random Forest</h2>
 <p>Random Forest, developed by Leo Breiman and Adele Cutler, is a trademarked algorithm. Its ease of use and flexibility have contributed to its widespread adoption, as it can handle both classification and regression problems. It helps identify which features or variables are most important for making predictions. This is particularly useful for understanding underlying patterns in the data, and it also helps reduce variance and produce uncorrelated trees.</p>
 </section>
-<section id="partial-dependence-plotpdp" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="partial-dependence-plotpdp"><span class="header-section-number">3.3</span> Partial Dependence Plot(PDP)</h2>
+<section id="pdp---partial-dependence-plot" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="pdp---partial-dependence-plot"><span class="header-section-number">3.3</span> PDP - Partial Dependence Plot</h2>
 <p>Given the project goal, PDP helps open up the black box and shows how each variable affects the probability of diabetes, while holding other variables constant. PDP can show the marginal effect of one or two features on the predicted outcome. This marginal effect reflects how much a specific feature impacts the model while all other features are held constant. PDP provides actionable insights that aid in interpretation, helping with education, prevention, and targeted interventions in our project.</p>
 </section>
-<section id="lime" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="lime"><span class="header-section-number">3.4</span> LIME</h2>
+<section id="lime---local-interpretable-model-agnostic-explanations" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="lime---local-interpretable-model-agnostic-explanations"><span class="header-section-number">3.4</span> LIME - Local Interpretable Model-Agnostic Explanations</h2>
 <p>Local Interpretable Model-agnostic Explanations (LIME) starts by choosing a specific sample, x’, which serves as the data point of interest. It then perturbs this sample by creating fake data points in the neighborhood of x’. These synthetic data points are fed into the black box model to generate predictions. Each point is weighted based on its distance or similarity to x’, giving more importance to those closer to the original sample. LIME then fits a simple and interpretable model to these weighted points. This local model helps us understand how the black box model’s predictions change in response to variations near x’. Ultimately, this process highlights which features are most important for that specific prediction.</p>
 
 
